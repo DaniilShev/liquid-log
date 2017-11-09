@@ -9,7 +9,8 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GCTimeParser implements TimeParser {
+public class GCTimeParser implements TimeParser
+{
 
 
     private static final Pattern PATTERN = Pattern.compile(

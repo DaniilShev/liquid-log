@@ -6,13 +6,15 @@ import ru.naumen.perfhouse.parser.DataSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GCDataParser implements DataParser {
+public class GCDataParser implements DataParser
+{
     private Pattern gcExecutionTimePattern = Pattern.compile(".*real=(.*)secs.*");
 
     public void parseLine(String line, DataSet currentSet)
     {
         Matcher matcher = gcExecutionTimePattern.matcher(line);
-        if (!matcher.find()) {
+        if (!matcher.find())
+        {
             return;
         }
 

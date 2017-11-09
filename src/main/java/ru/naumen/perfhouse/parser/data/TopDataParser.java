@@ -18,14 +18,17 @@ import java.util.regex.Pattern;
  * @author dkolmogortsev
  *
  */
-public class TopDataParser implements DataParser {
+public class TopDataParser implements DataParser
+{
     private Pattern cpuAndMemPattren = Pattern.compile(
             "^ *\\d+ \\S+ +\\S+ +\\S+ +\\S+ +\\S+ +\\S+ +\\S+ \\S+ +(\\S+) +(\\S+) +\\S+ java");
     private Pattern loadAvgPattern = Pattern.compile(".*load average:(.*)");
 
-    public void parseLine(String line, DataSet currentSet) {
+    public void parseLine(String line, DataSet currentSet)
+    {
         Matcher loadAvgMatcher = loadAvgPattern.matcher(line);
-        if (!loadAvgMatcher.find()) {
+        if (!loadAvgMatcher.find())
+        {
             return;
         }
 
@@ -33,7 +36,8 @@ public class TopDataParser implements DataParser {
         currentSet.getCpuData().addLa(Double.parseDouble(data));
 
         Matcher cpuAndMemMatcher = cpuAndMemPattren.matcher(line);
-        if (!cpuAndMemMatcher.find()) {
+        if (!cpuAndMemMatcher.find())
+        {
             return;
         }
 

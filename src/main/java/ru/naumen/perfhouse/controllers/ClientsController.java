@@ -28,19 +28,22 @@ import ru.naumen.perfhouse.parser.Parser;
  * Created by dkirpichenkov on 26.10.16.
  */
 @Controller
-public class ClientsController {
+public class ClientsController
+{
     private Logger LOG = LoggerFactory.getLogger(ClientsController.class);
     private InfluxDAO influxDAO;
     private Parser parser;
 
     @Inject
-    public ClientsController(InfluxDAO influxDAO, Parser parser) {
+    public ClientsController(InfluxDAO influxDAO, Parser parser)
+    {
         this.influxDAO = influxDAO;
         this.parser = parser;
     }
 
     @RequestMapping(path = "/")
-    public ModelAndView index() {
+    public ModelAndView index()
+    {
         List<String> clients = influxDAO.getDbList();
         HashMap<String, Object> clientLast864Links = new HashMap<>();
         HashMap<String, Object> clientLinks = new HashMap<>();
@@ -76,15 +79,19 @@ public class ClientsController {
 
     @RequestMapping(path = "{client}", method = RequestMethod.POST)
     public void postClientStatFormat1(@PathVariable("client") String client, HttpServletRequest request,
-                                      HttpServletResponse response) throws IOException {
-        try {
+                                      HttpServletResponse response) throws IOException
+    {
+        try
+        {
             client = client.replaceAll("-", "_");
             influxDAO.connectToDB(client);
             String data = IOUtils.toString(request.getInputStream(), "UTF-8");
             JSONObject measure = new JSONObject(data);
             influxDAO.storeFromJSon(null, client, measure);
             response.sendError(HttpServletResponse.SC_OK);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             LOG.error(ex.toString(), ex);
             throw ex;
         }
@@ -97,12 +104,16 @@ public class ClientsController {
                            @RequestParam("timeZone") String timeZone,
                            @RequestParam(name = "printLog", defaultValue = "off") String printLog,
                            HttpServletRequest request,
-                           HttpServletResponse response) throws Exception {
+                           HttpServletResponse response) throws Exception
+    {
 
-        try {
+        try
+        {
             parser.parse(dbName, parsingMode, logPath, timeZone, printLog.equals("on"));
             response.setStatus(HttpServletResponse.SC_OK);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             LOG.error(ex.toString(), ex);
             throw ex;
         }

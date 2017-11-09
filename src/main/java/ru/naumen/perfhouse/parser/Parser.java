@@ -49,7 +49,6 @@ public class Parser
         TimeParser timeParser;
         DataParser dataParser;
 
-
         switch (parsingMode)
         {
             case "sdng":
@@ -76,7 +75,8 @@ public class Parser
             while ((line = br.readLine()) != null) {
                 long time = timeParser.parseTime(line);
 
-                if (time == 0) {
+                if (time == 0)
+                {
                     continue;
                 }
 

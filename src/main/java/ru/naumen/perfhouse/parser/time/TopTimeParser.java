@@ -10,7 +10,8 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TopTimeParser implements TimeParser {
+public class TopTimeParser implements TimeParser
+{
 
     private static final Pattern TIME_PATTERN = Pattern.compile("^_+ (\\S+)");
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
@@ -32,7 +33,8 @@ public class TopTimeParser implements TimeParser {
     }
 
     @Override
-    public long parseTime(String line) throws ParseException {
+    public long parseTime(String line) throws ParseException
+    {
         Matcher matcher = TIME_PATTERN.matcher(line);
 
         if (matcher.find())
