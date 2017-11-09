@@ -12,13 +12,13 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;;
  */
 public class TopData
 {
-    private DescriptiveStatistics laStat = new DescriptiveStatistics();
+    private DescriptiveStatistics loadAvgStat = new DescriptiveStatistics();
     private DescriptiveStatistics cpuStat = new DescriptiveStatistics();
     private DescriptiveStatistics memStat = new DescriptiveStatistics();
 
     public void addLa(double la)
     {
-        laStat.addValue(la);
+        loadAvgStat.addValue(la);
     }
 
     public void addCpu(double cpu)
@@ -33,12 +33,12 @@ public class TopData
 
     public boolean isNan()
     {
-        return laStat.getN() == 0 && cpuStat.getN() == 0 && memStat.getN() == 0;
+        return loadAvgStat.getN() == 0 && cpuStat.getN() == 0 && memStat.getN() == 0;
     }
 
     public double getAvgLa()
     {
-        return roundToTwoPlaces(getSafeDouble(laStat.getMean()));
+        return roundToTwoPlaces(getSafeDouble(loadAvgStat.getMean()));
     }
 
     public double getAvgCpuUsage()
@@ -53,7 +53,7 @@ public class TopData
 
     public double getMaxLa()
     {
-        return roundToTwoPlaces(getSafeDouble(laStat.getMax()));
+        return roundToTwoPlaces(getSafeDouble(loadAvgStat.getMax()));
     }
 
     public double getMaxCpu()

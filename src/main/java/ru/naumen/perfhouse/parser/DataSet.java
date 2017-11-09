@@ -7,25 +7,15 @@ public class DataSet
 {
     private ActionDoneParser actionsDone;
     private ErrorParser errors;
-    private GCParser gc;
-    private TopData cpuData = new TopData();
+    private GCData gcData;
+    private TopData cpuData;
 
     public DataSet()
     {
         actionsDone = new ActionDoneParser();
         errors = new ErrorParser();
-        gc = new GCParser();
-    }
-
-    public void parseLine(String line)
-    {
-        errors.parseLine(line);
-        actionsDone.parseLine(line);
-    }
-
-    public void parseGcLine(String line)
-    {
-        gc.parseLine(line);
+        gcData = new GCData();
+        cpuData = new TopData();
     }
 
     public ActionDoneParser getActionsDone()
@@ -38,12 +28,12 @@ public class DataSet
         return errors;
     }
 
-    public GCParser getGc()
+    public GCData getGc()
     {
-        return gc;
+        return gcData;
     }
 
-    public TopData cpuData()
+    public TopData getCpuData()
     {
         return cpuData;
     }

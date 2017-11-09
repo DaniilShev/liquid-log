@@ -48,7 +48,7 @@ import org.springframework.stereotype.Component;
 import ru.naumen.perfhouse.statdata.Constants;
 import ru.naumen.perfhouse.parser.ActionDoneParser;
 import ru.naumen.perfhouse.parser.ErrorParser;
-import ru.naumen.perfhouse.parser.GCParser;
+import ru.naumen.perfhouse.parser.GCData;
 import ru.naumen.perfhouse.parser.TopData;
 
 /**
@@ -183,7 +183,7 @@ public class InfluxDAO
         }
     }
 
-    public void storeGc(BatchPoints batch, String dbName, long date, GCParser gc)
+    public void storeGc(BatchPoints batch, String dbName, long date, GCData gc)
     {
         Point point = Point.measurement(Constants.MEASUREMENT_NAME).time(date, TimeUnit.MILLISECONDS)
                 .addField(GCTIMES, gc.getGcTimes()).addField(AVARAGE_GC_TIME, gc.getCalculatedAvg())
