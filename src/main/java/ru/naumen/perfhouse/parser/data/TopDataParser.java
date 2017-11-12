@@ -23,26 +23,29 @@ public class TopDataParser implements DataParser
     private Pattern cpuAndMemPattren = Pattern.compile(
             "^ *\\d+ \\S+ +\\S+ +\\S+ +\\S+ +\\S+ +\\S+ +\\S+ \\S+ +(\\S+) +(\\S+) +\\S+ java");
     private Pattern loadAvgPattern = Pattern.compile(".*load average:(.*)");
+    private DataSet currentSet;
 
-    public void parseLine(String line, DataSet currentSet)
+    @Override
+    public void setCurrentSet(DataSet dataSet) {
+        currentSet = dataSet;
+    }
+
+    public void parseLine(String line)
     {
         Matcher loadAvgMatcher = loadAvgPattern.matcher(line);
-        if (!loadAvgMatcher.find())
+        if (loadAvgMatcher.find())
         {
+            String data = loadAvgMatcher.group(1).split(",")[0].trim();
+            currentSet.getCpuData().addLa(Double.parseDouble(data));
+
             return;
         }
-
-        String data = loadAvgMatcher.group(1).split(",")[0].trim();
-        currentSet.getCpuData().addLa(Double.parseDouble(data));
 
         Matcher cpuAndMemMatcher = cpuAndMemPattren.matcher(line);
-        if (!cpuAndMemMatcher.find())
+        if (cpuAndMemMatcher.find())
         {
-            return;
+            currentSet.getCpuData().addCpu(Double.valueOf(cpuAndMemMatcher.group(1)));
+            currentSet.getCpuData().addMem(Double.valueOf(cpuAndMemMatcher.group(2)));
         }
-
-        currentSet.getCpuData().addCpu(Double.valueOf(cpuAndMemMatcher.group(1)));
-        currentSet.getCpuData().addMem(Double.valueOf(cpuAndMemMatcher.group(2)));
-
     }
 }

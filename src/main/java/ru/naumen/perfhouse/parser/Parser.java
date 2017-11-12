@@ -11,12 +11,8 @@ import org.influxdb.dto.BatchPoints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.influx.InfluxDAO;
-import ru.naumen.perfhouse.parser.data.GCDataParser;
-import ru.naumen.perfhouse.parser.data.SdngDataParser;
-import ru.naumen.perfhouse.parser.data.TopDataParser;
-import ru.naumen.perfhouse.parser.time.GCTimeParser;
-import ru.naumen.perfhouse.parser.time.SdngTimeParser;
-import ru.naumen.perfhouse.parser.time.TopTimeParser;
+import ru.naumen.perfhouse.parser.data.*;
+import ru.naumen.perfhouse.parser.time.*;
 
 /**
  * Created by doki on 22.10.16.
@@ -54,7 +50,8 @@ public class Parser
             case "sdng":
                 //Parse sdng
                 timeParser = new SdngTimeParser(timeZone);
-                dataParser = new SdngDataParser();
+                dataParser = new CompositeDataParser(new DataParser[]{
+                        new ActionDataParser(), new ErrorDataParser()});
                 break;
             case "gc":
                 timeParser = new GCTimeParser(timeZone);
@@ -74,18 +71,17 @@ public class Parser
             String line;
             while ((line = br.readLine()) != null) {
                 long time = timeParser.parseTime(line);
-
-                if (time == 0)
+                if (time != 0)
                 {
-                    continue;
+                    int min5 = 5 * 60 * 1000;
+                    long count = time / min5;
+                    long key = count * min5;
+
+                    DataSet ds = data.computeIfAbsent(key, k -> new DataSet());
+                    dataParser.setCurrentSet(ds);
                 }
 
-                int min5 = 5 * 60 * 1000;
-                long count = time / min5;
-                long key = count * min5;
-
-                DataSet ds = data.computeIfAbsent(key, k -> new DataSet());
-                dataParser.parseLine(line, ds);
+                dataParser.parseLine(line);
             }
         }
 
