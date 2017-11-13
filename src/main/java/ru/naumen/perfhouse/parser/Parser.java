@@ -50,8 +50,8 @@ public class Parser
             case "sdng":
                 //Parse sdng
                 timeParser = new SdngTimeParser(timeZone);
-                dataParser = new CompositeDataParser(new DataParser[]{
-                        new ActionDataParser(), new ErrorDataParser()});
+                dataParser = new CompositeDataParser(
+                        new ActionDataParser(), new ErrorDataParser());
                 break;
             case "gc":
                 timeParser = new GCTimeParser(timeZone);
@@ -71,17 +71,17 @@ public class Parser
             String line;
             while ((line = br.readLine()) != null) {
                 long time = timeParser.parseTime(line);
-                if (time != 0)
+                if (time == 0)
                 {
-                    int min5 = 5 * 60 * 1000;
-                    long count = time / min5;
-                    long key = count * min5;
-
-                    DataSet ds = data.computeIfAbsent(key, k -> new DataSet());
-                    dataParser.setCurrentSet(ds);
+                    continue;
                 }
 
-                dataParser.parseLine(line);
+                int min5 = 5 * 60 * 1000;
+                long count = time / min5;
+                long key = count * min5;
+
+                DataSet ds = data.computeIfAbsent(key, k -> new DataSet());
+                dataParser.parseLine(line, ds);
             }
         }
 

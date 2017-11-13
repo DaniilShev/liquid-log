@@ -8,15 +8,8 @@ import ru.naumen.perfhouse.parser.DataSet;
  */
 public class ErrorDataParser implements DataParser
 {
-    private DataSet currentSet;
-
     @Override
-    public void setCurrentSet(DataSet dataSet) {
-        currentSet = dataSet;
-    }
-
-    @Override
-    public void parseLine(String line)
+    public void parseLine(String line, DataSet currentSet)
     {
         currentSet.getErrors().parseLine(line);
     }

@@ -23,14 +23,8 @@ public class TopDataParser implements DataParser
     private Pattern cpuAndMemPattren = Pattern.compile(
             "^ *\\d+ \\S+ +\\S+ +\\S+ +\\S+ +\\S+ +\\S+ +\\S+ \\S+ +(\\S+) +(\\S+) +\\S+ java");
     private Pattern loadAvgPattern = Pattern.compile(".*load average:(.*)");
-    private DataSet currentSet;
 
-    @Override
-    public void setCurrentSet(DataSet dataSet) {
-        currentSet = dataSet;
-    }
-
-    public void parseLine(String line)
+    public void parseLine(String line, DataSet currentSet)
     {
         Matcher loadAvgMatcher = loadAvgPattern.matcher(line);
         if (loadAvgMatcher.find())

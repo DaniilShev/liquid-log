@@ -16,6 +16,7 @@ public class TopTimeParser implements TimeParser
     private static final Pattern TIME_PATTERN = Pattern.compile("^_+ (\\S+)");
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
             "yyyyMMddHH:mm");
+    private long lastTime;
 
     private String basicTime;
 
@@ -42,9 +43,9 @@ public class TopTimeParser implements TimeParser
             String timeString = basicTime + matcher.group(1);
             long time = DATE_FORMAT.parse(timeString).getTime();
 
-            return time;
+            lastTime = time;
         }
 
-        return 0L;
+        return lastTime;
     }
 }
