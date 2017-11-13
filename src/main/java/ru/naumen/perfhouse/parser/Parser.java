@@ -4,13 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashMap;
-
-import org.influxdb.dto.BatchPoints;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.naumen.perfhouse.influx.InfluxDAO;
 import ru.naumen.perfhouse.parser.data.*;
 import ru.naumen.perfhouse.parser.time.*;
 
