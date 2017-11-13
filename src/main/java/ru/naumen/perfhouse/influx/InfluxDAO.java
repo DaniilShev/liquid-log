@@ -55,7 +55,7 @@ import ru.naumen.perfhouse.parser.TopData;
  * Created by doki on 24.10.16.
  */
 @Component
-public class InfluxDAO
+public class InfluxDAO implements InfluxDAOInterface
 {
     private String influxHost;
 

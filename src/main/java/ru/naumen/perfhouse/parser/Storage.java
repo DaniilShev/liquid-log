@@ -3,7 +3,7 @@ package ru.naumen.perfhouse.parser;
 import org.influxdb.dto.BatchPoints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.naumen.perfhouse.influx.InfluxDAO;
+import ru.naumen.perfhouse.influx.InfluxDAOInterface;
 
 @Service
 class Storage {
@@ -12,21 +12,24 @@ class Storage {
     private long currentKey;
     private DataSet currentSet;
     private BatchPoints points;
+    private InfluxDAOInterface influxDAO;
 
     @Autowired
-    private InfluxDAO influxDAO;
+    Storage(InfluxDAOInterface influxDAOInterface) {
+        influxDAO = influxDAOInterface;
+    }
 
-    Storage(String dbName, boolean printLog) {
-        currentDb = dbName.replaceAll("-", "_");;
+    void init(String dbName, boolean printLog) {
+        currentDb = dbName.replaceAll("-", "_");
         log = printLog;
 
-        influxDAO.connectToDB(currentDb);
-        BatchPoints points = influxDAO.startBatchPoints(currentDb);
-
-        if (printLog)
+        if (log)
         {
             System.out.print("Timestamp;Actions;Min;Mean;Stddev;50%%;95%%;99%%;99.9%%;Max;Errors\n");
         }
+
+        influxDAO.connectToDB(currentDb);
+        points = influxDAO.startBatchPoints(currentDb);
     }
 
     DataSet get(long key) {
@@ -35,13 +38,16 @@ class Storage {
 
             currentKey = key;
             currentSet = new DataSet();
-
         }
 
         return currentSet;
     }
 
     private void store() {
+        if (currentSet == null) {
+            return;
+        }
+
         ActionDoneParser dones = currentSet.getActionsDone();
         dones.calculate();
         ErrorParser erros = currentSet.getErrors();

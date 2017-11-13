@@ -20,6 +20,8 @@ import ru.naumen.perfhouse.parser.time.*;
 @Service
 public class Parser
 {
+    @Autowired
+    private Storage storage;
     /**
      * 
      * @param dbName - Name of database for saving logs
@@ -27,14 +29,14 @@ public class Parser
      * @param logPath - Path to log file
      * @param timeZone - Time zone
      * @param printLog - Should print logs in console
-     * @throws IOException
-     * @throws ParseException
+     * @throws IOException - Can fall when reading new line
+     * @throws ParseException - Can fall when parsing time from line
      */
     public void parse(String dbName, String parsingMode, String logPath,
                       String timeZone, Boolean printLog)
             throws IOException, ParseException
     {
-        Storage storage = new Storage(dbName, printLog);
+        storage.init(dbName, printLog);
 
         TimeParser timeParser;
         DataParser dataParser;
