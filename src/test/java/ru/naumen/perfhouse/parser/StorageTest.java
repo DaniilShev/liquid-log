@@ -70,7 +70,7 @@ public class StorageTest {
         //when
         DataSet firstSet = storage.get(1);
         firstSet.getGc().addValue(1.5);
-        DataSet secondSet = storage.get(2);
+        storage.get(2);
 
         //then
         Mockito.verify(mockedInfluxDao)
@@ -88,7 +88,7 @@ public class StorageTest {
         firstSet.getCpuData().addCpu(1.5);
         firstSet.getCpuData().addLa(3.2);
         firstSet.getCpuData().addMem(2);
-        DataSet secondSet = storage.get(2);
+        storage.get(2);
 
         //then
         Mockito.verify(mockedInfluxDao)
@@ -104,11 +104,47 @@ public class StorageTest {
         //when
         DataSet firstSet = storage.get(1);
         firstSet.getActionsDone().parseLine("Done(10): AddObjectAction");
-        DataSet secondSet = storage.get(2);
+        storage.get(2);
 
         //then
-        Mockito.verify(mockedInfluxDao).storeActionsFromLog(batchPoint, "test", 1,
-                        firstSet.getActionsDone(), firstSet.getErrors());
+        Mockito.verify(mockedInfluxDao).storeActionsFromLog(batchPoint, "test",
+                1, firstSet.getActionsDone(), firstSet.getErrors());
+    }
+
+    @Test
+    public void mustNotStore() {
+        //given
+        Storage storage = new Storage(mockedInfluxDao);
+        storage.init("test", false);
+
+        //when
+        storage.get(1);
+        storage.save();
+
+        //then
+        Mockito.verify(mockedInfluxDao, Mockito.never()).storeGc(
+                Mockito.any(), Mockito.any(), Mockito.anyLong(), Mockito.any());
+        Mockito.verify(mockedInfluxDao, Mockito.never()).storeTop(
+                Mockito.any(),Mockito.any(), Mockito.anyLong(), Mockito.any());
+        Mockito.verify(mockedInfluxDao, Mockito.never()).storeActionsFromLog(
+                Mockito.any(),Mockito.any(), Mockito.anyLong(), Mockito.any(),
+                Mockito.any());
+    }
+
+    @Test
+    public void mustSaveFirstSet() {
+        //given
+        Storage storage = new Storage(mockedInfluxDao);
+        storage.init("test", false);
+
+        //when
+        DataSet firstSet = storage.get(1);
+        firstSet.getActionsDone().parseLine("Done(10): AddObjectAction");
+        storage.save();
+
+        //then
+        Mockito.verify(mockedInfluxDao).storeActionsFromLog(batchPoint, "test",
+                1, firstSet.getActionsDone(), firstSet.getErrors());
     }
 
     @Test
@@ -125,9 +161,9 @@ public class StorageTest {
         storage.save();
 
         //then
-        Mockito.verify(mockedInfluxDao).storeActionsFromLog(batchPoint, "test", 1,
-                        firstSet.getActionsDone(), firstSet.getErrors());
-        Mockito.verify(mockedInfluxDao).storeActionsFromLog(batchPoint, "test", 2,
-                        secondSet.getActionsDone(), secondSet.getErrors());
+        Mockito.verify(mockedInfluxDao).storeActionsFromLog(batchPoint, "test",
+                1, firstSet.getActionsDone(), firstSet.getErrors());
+        Mockito.verify(mockedInfluxDao).storeActionsFromLog(batchPoint, "test",
+                2, secondSet.getActionsDone(), secondSet.getErrors());
     }
 }
