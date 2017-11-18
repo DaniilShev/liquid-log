@@ -19,12 +19,16 @@ class Storage {
         this.influxDAO = influxDAO;
     }
 
+    private void startBatchPoints() {
+        points = influxDAO.startBatchPoints(currentDb);
+    }
+
     void init(String dbName, boolean printLog) {
         currentDb = dbName.replaceAll("-", "_");
         log = printLog;
 
         influxDAO.connectToDB(currentDb);
-        points = influxDAO.startBatchPoints(currentDb);
+        startBatchPoints();
 
         if (log)
         {
@@ -84,5 +88,6 @@ class Storage {
     void save() {
         store();
         influxDAO.writeBatch(points);
+        startBatchPoints();
     }
 }
