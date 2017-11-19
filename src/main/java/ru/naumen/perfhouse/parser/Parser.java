@@ -4,13 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashMap;
-
-import org.influxdb.dto.BatchPoints;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.naumen.perfhouse.influx.InfluxDAO;
 import ru.naumen.perfhouse.parser.data.*;
 import ru.naumen.perfhouse.parser.time.*;
 
@@ -21,8 +17,7 @@ import ru.naumen.perfhouse.parser.time.*;
 public class Parser
 {
     @Autowired
-    private InfluxDAO influxDAO;
-
+    private Storage storage;
     /**
      * 
      * @param dbName - Name of database for saving logs
@@ -30,17 +25,14 @@ public class Parser
      * @param logPath - Path to log file
      * @param timeZone - Time zone
      * @param printLog - Should print logs in console
-     * @throws IOException
-     * @throws ParseException
+     * @throws IOException - Can fall when reading new line
+     * @throws ParseException - Can fall when parsing time from line
      */
-    public void parse(String dbName, String parsingMode, String logPath, String timeZone, Boolean printLog) throws IOException, ParseException
+    public void parse(String dbName, String parsingMode, String logPath,
+                      String timeZone, Boolean printLog)
+            throws IOException, ParseException
     {
-        dbName = dbName.replaceAll("-", "_");
-        influxDAO.connectToDB(dbName);
-
-        String finalDbName = dbName;
-        BatchPoints points = influxDAO.startBatchPoints(dbName);
-        HashMap<Long, DataSet> data = new HashMap<>();
+        storage.init(dbName, printLog);
 
         TimeParser timeParser;
         DataParser dataParser;
@@ -48,7 +40,6 @@ public class Parser
         switch (parsingMode)
         {
             case "sdng":
-                //Parse sdng
                 timeParser = new SdngTimeParser(timeZone);
                 dataParser = new CompositeDataParser(
                         new ActionDataParser(), new ErrorDataParser());
@@ -80,48 +71,10 @@ public class Parser
                 long count = time / min5;
                 long key = count * min5;
 
-                DataSet ds = data.computeIfAbsent(key, k -> new DataSet());
-                dataParser.parseLine(line, ds);
+                dataParser.parseLine(line, storage.get(key));
             }
         }
 
-        if (printLog)
-        {
-            System.out.print("Timestamp;Actions;Min;Mean;Stddev;50%%;95%%;99%%;99.9%%;Max;Errors\n");
-        }
-
-        BatchPoints finalPoints = points;
-        data.forEach((k, set) ->
-        {
-            ActionDoneParser dones = set.getActionsDone();
-            dones.calculate();
-            ErrorParser erros = set.getErrors();
-
-            if (printLog)
-            {
-                System.out.print(String.format("%d;%d;%f;%f;%f;%f;%f;%f;%f;%f;%d\n", k, dones.getCount(),
-                        dones.getMin(), dones.getMean(), dones.getStddev(), dones.getPercent50(), dones.getPercent95(),
-                        dones.getPercent99(), dones.getPercent999(), dones.getMax(), erros.getErrorCount()));
-            }
-
-            if (!dones.isNan())
-            {
-                influxDAO.storeActionsFromLog(finalPoints, finalDbName, k, dones, erros);
-            }
-
-            GCData gc = set.getGc();
-            if (!gc.isNan())
-            {
-                influxDAO.storeGc(finalPoints, finalDbName, k, gc);
-            }
-
-            TopData cpuData = set.getCpuData();
-            if (!cpuData.isNan())
-            {
-                influxDAO.storeTop(finalPoints, finalDbName, k, cpuData);
-            }
-        });
-
-        influxDAO.writeBatch(points);
+        storage.save();
     }
 }
