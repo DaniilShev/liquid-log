@@ -1,12 +1,12 @@
-package ru.naumen.perfhouse.parser;
+package ru.naumen.perfhouse.parser.data;
 
 import static ru.naumen.perfhouse.parser.NumberUtils.getSafeDouble;
 import static ru.naumen.perfhouse.parser.NumberUtils.roundToTwoPlaces;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 /**
- * Cpu usage data, acquired from top output
+ * Cpu usage dataparsers, acquired from top output
  * @author dkolmogortsev
  *
  */

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,6 +12,7 @@ import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +34,7 @@ public class ClientsController
     private InfluxDAO influxDAO;
     private Parser parser;
 
-    @Inject
+    @Autowired
     public ClientsController(InfluxDAO influxDAO, Parser parser)
     {
         this.influxDAO = influxDAO;

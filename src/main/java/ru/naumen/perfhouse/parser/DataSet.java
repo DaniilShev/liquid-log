@@ -1,31 +1,33 @@
 package ru.naumen.perfhouse.parser;
 
+import ru.naumen.perfhouse.parser.data.*;
+
 /**
  * Created by doki on 22.10.16.
  */
 public class DataSet
 {
-    private ActionDoneParser actionsDone;
-    private ErrorParser errors;
+    private ActionDoneData actionsDoneData;
+    private ErrorData errorsData;
     private GCData gcData;
     private TopData cpuData;
 
     public DataSet()
     {
-        actionsDone = new ActionDoneParser();
-        errors = new ErrorParser();
+        actionsDoneData = new ActionDoneData();
+        errorsData = new ErrorData();
         gcData = new GCData();
         cpuData = new TopData();
     }
 
-    public ActionDoneParser getActionsDone()
+    public ActionDoneData getActionsDone()
     {
-        return actionsDone;
+        return actionsDoneData;
     }
 
-    public ErrorParser getErrors()
+    public ErrorData getErrors()
     {
-        return errors;
+        return errorsData;
     }
 
     public GCData getGc()

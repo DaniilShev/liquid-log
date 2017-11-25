@@ -5,10 +5,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.naumen.perfhouse.parser.data.*;
-import ru.naumen.perfhouse.parser.time.*;
+import ru.naumen.perfhouse.parser.dataparsers.*;
+import ru.naumen.perfhouse.parser.timeparsers.*;
 
 /**
  * Created by doki on 22.10.16.
@@ -17,7 +18,8 @@ import ru.naumen.perfhouse.parser.time.*;
 public class Parser
 {
     @Autowired
-    private Storage storage;
+    private BeanFactory factory;
+
     /**
      * 
      * @param dbName - Name of database for saving logs
@@ -26,12 +28,13 @@ public class Parser
      * @param timeZone - Time zone
      * @param printLog - Should print logs in console
      * @throws IOException - Can fall when reading new line
-     * @throws ParseException - Can fall when parsing time from line
+     * @throws ParseException - Can fall when parsing timeparsers from line
      */
     public void parse(String dbName, String parsingMode, String logPath,
                       String timeZone, Boolean printLog)
             throws IOException, ParseException
     {
+        Storage storage = factory.getBean(Storage.class);
         storage.init(dbName, printLog);
 
         TimeParser timeParser;
@@ -42,15 +45,16 @@ public class Parser
             case "sdng":
                 timeParser = new SdngTimeParser(timeZone);
                 dataParser = new CompositeDataParser(
-                        new ActionDataParser(), new ErrorDataParser());
+                        factory.getBean(ActionDoneDataParser.class),
+                        factory.getBean(ErrorDataParser.class));
                 break;
             case "gc":
                 timeParser = new GCTimeParser(timeZone);
-                dataParser = new GCDataParser();
+                dataParser = factory.getBean(GCDataParser.class);
                 break;
             case "top":
                 timeParser = new TopTimeParser(logPath, timeZone);
-                dataParser = new TopDataParser();
+                dataParser = factory.getBean(TopDataParser.class);
                 break;
             default:
                 throw new IllegalArgumentException(
@@ -74,7 +78,5 @@ public class Parser
                 dataParser.parseLine(line, storage.get(key));
             }
         }
-
-        storage.save();
     }
 }

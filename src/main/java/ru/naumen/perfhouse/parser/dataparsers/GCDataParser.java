@@ -1,11 +1,13 @@
-package ru.naumen.perfhouse.parser.data;
+package ru.naumen.perfhouse.parser.dataparsers;
 
+import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.parser.DataParser;
 import ru.naumen.perfhouse.parser.DataSet;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Service
 public class GCDataParser implements DataParser
 {
     private Pattern gcExecutionTimePattern = Pattern.compile(".*real=(.*)secs.*");

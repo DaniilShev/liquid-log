@@ -1,4 +1,4 @@
-package ru.naumen.perfhouse.parser.time;
+package ru.naumen.perfhouse.parser.timeparsers;
 
 import ru.naumen.perfhouse.parser.TimeParser;
 
@@ -9,17 +9,18 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GCTimeParser implements TimeParser
+/**
+ * Created by doki on 22.10.16.
+ */
+public class SdngTimeParser implements TimeParser
 {
-
-
-    private static final Pattern PATTERN = Pattern.compile(
-            "^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}\\+\\d{4}).*");
+    private static final Pattern TIME_PATTERN = Pattern.compile(
+            "^\\d+ \\[.*?\\] \\((\\d{2} .{3} \\d{4} \\d{2}:\\d{2}:\\d{2},\\d{3})\\)");
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
-            "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+            "dd MMM yyyy HH:mm:ss,SSS",
             new Locale("ru", "RU"));
 
-    public GCTimeParser(String timeZone)
+    public SdngTimeParser(String timeZone)
     {
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone(timeZone));
     }
@@ -27,14 +28,13 @@ public class GCTimeParser implements TimeParser
     @Override
     public long parseTime(String line) throws ParseException
     {
-        Matcher matcher = PATTERN.matcher(line);
+        Matcher matcher = TIME_PATTERN.matcher(line);
 
         if (matcher.find())
         {
             String timeString = matcher.group(1);
-            long time = DATE_FORMAT.parse(timeString).getTime();
 
-            return time;
+            return DATE_FORMAT.parse(timeString).getTime();
         }
 
         return 0L;

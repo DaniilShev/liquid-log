@@ -1,4 +1,4 @@
-package ru.naumen.perfhouse.parser.data;
+package ru.naumen.perfhouse.parser.dataparsers;
 
 import ru.naumen.perfhouse.parser.DataParser;
 import ru.naumen.perfhouse.parser.DataSet;
