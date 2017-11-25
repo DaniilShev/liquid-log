@@ -15,9 +15,9 @@ import java.util.regex.Pattern;
 @Service
 public class TopDataParser implements DataParser
 {
-    private Pattern cpuAndMemPattren = Pattern.compile(
+    private static final Pattern cpuAndMemPattern = Pattern.compile(
             "^ *\\d+ \\S+ +\\S+ +\\S+ +\\S+ +\\S+ +\\S+ +\\S+ \\S+ +(\\S+) +(\\S+) +\\S+ java");
-    private Pattern loadAvgPattern = Pattern.compile(".*load average:(.*)");
+    private static final Pattern loadAvgPattern = Pattern.compile(".*load average:(.*)");
 
     public void parseLine(String line, DataSet currentSet)
     {
@@ -30,7 +30,7 @@ public class TopDataParser implements DataParser
             return;
         }
 
-        Matcher cpuAndMemMatcher = cpuAndMemPattren.matcher(line);
+        Matcher cpuAndMemMatcher = cpuAndMemPattern.matcher(line);
         if (cpuAndMemMatcher.find())
         {
             currentSet.getCpuData().addCpu(Double.valueOf(cpuAndMemMatcher.group(1)));

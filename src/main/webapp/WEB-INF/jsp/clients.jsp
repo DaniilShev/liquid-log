@@ -36,7 +36,7 @@
                 })
 
                 $('#formMaxResults').val(100)
-                $('#customForm').attr('action','/history/'+client+'/custom')
+                $('#customRequestForm').attr('action','/history/'+client+'/custom')
 
                 console.log(moment().format('zz'))
             }
@@ -64,14 +64,14 @@
                         type: "POST",
                         dataType : "json",
                         data: formData,
-                        success: function() {
-                           $('#parserResult').text("Success!")
-                           $("#parseButton").hide()
-                        },
-                        error: function(response) {
+                        complete: function(response, status) {
+                           if (status === "parsererror" && response.responseText == "") {
+                              $('#parserResult').text("Success!")
+
+                              return;
+                           }
+
                            $('#parserResult').text("Error: " + response.responseJSON.message + "!")
-                        },
-                        complete: function() {
                            $("#parserForm .modal-body *").prop("disabled", false)
                            $("#parseButton").text('Parse').prop('disabled', false)
                         },
@@ -211,7 +211,7 @@
                                 <option>GMT−2:00</option>
                                 <option>GMT−1:00</option>
                                 <option>GMT−0:25:21</option>
-                                <option>GMT 0:00</option>
+                                <option selected>GMT 0:00</option>
                                 <option>GMT+0:20</option>
                                 <option>GMT+0:30</option>
                                 <option>GMT+1:00</option>
@@ -252,7 +252,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success" id="parseButton">Parse</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="location.reload();">Close</button>
                     </div>
                 </form>
             </div>

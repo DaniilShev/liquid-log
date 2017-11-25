@@ -89,7 +89,6 @@ class Storage {
         }
     }
 
-    @PreDestroy
     void close() {
         store();
         influxDAO.writeBatch(points);

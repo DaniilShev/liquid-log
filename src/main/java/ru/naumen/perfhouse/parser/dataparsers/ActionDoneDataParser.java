@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  */
 @Service
 public class ActionDoneDataParser implements DataParser {
-    private Pattern doneRegEx = Pattern.compile("Done\\((\\d+)\\): ?(.*?Action)");
+    private static final Pattern doneRegEx = Pattern.compile("Done\\((\\d+)\\): ?(.*?Action)");
 
     private static Set<String> EXCLUDED_ACTIONS = new HashSet<>();
     static {

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 @Service
 public class GCDataParser implements DataParser
 {
-    private Pattern gcExecutionTimePattern = Pattern.compile(".*real=(.*)secs.*");
+    private static final Pattern gcExecutionTimePattern = Pattern.compile(".*real=(.*)secs.*");
 
     @Override
     public void parseLine(String line, DataSet currentSet)

@@ -17,8 +17,25 @@ import ru.naumen.perfhouse.parser.timeparsers.*;
 @Service
 public class Parser
 {
-    @Autowired
+
     private BeanFactory factory;
+
+    private CompositeDataParser sdngDataParser;
+    private TopDataParser topDataParser;
+    private GCDataParser gcDataParser;
+
+    @Autowired
+    public Parser(BeanFactory factory, TopDataParser topDataParser,
+                  GCDataParser gcDataParser,
+                  ActionDoneDataParser actionDoneDataParser,
+                  ErrorDataParser errorDataParser) {
+        this.factory = factory;
+
+        this.sdngDataParser = new CompositeDataParser(actionDoneDataParser,
+                errorDataParser);
+        this.topDataParser = topDataParser;
+        this.gcDataParser = gcDataParser;
+    }
 
     /**
      * 
@@ -44,17 +61,15 @@ public class Parser
         {
             case "sdng":
                 timeParser = new SdngTimeParser(timeZone);
-                dataParser = new CompositeDataParser(
-                        factory.getBean(ActionDoneDataParser.class),
-                        factory.getBean(ErrorDataParser.class));
+                dataParser = sdngDataParser;
                 break;
             case "gc":
                 timeParser = new GCTimeParser(timeZone);
-                dataParser = factory.getBean(GCDataParser.class);
+                dataParser = gcDataParser;
                 break;
             case "top":
                 timeParser = new TopTimeParser(logPath, timeZone);
-                dataParser = factory.getBean(TopDataParser.class);
+                dataParser = topDataParser;
                 break;
             default:
                 throw new IllegalArgumentException(
@@ -78,5 +93,7 @@ public class Parser
                 dataParser.parseLine(line, storage.get(key));
             }
         }
+
+        storage.close();
     }
 }
