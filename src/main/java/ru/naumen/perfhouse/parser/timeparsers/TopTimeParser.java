@@ -1,11 +1,9 @@
-package ru.naumen.perfhouse.parser.time;
+package ru.naumen.perfhouse.parser.timeparsers;
 
 import ru.naumen.perfhouse.parser.TimeParser;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +15,6 @@ public class TopTimeParser implements TimeParser
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
             "yyyyMMddHH:mm");
     private long lastTime;
-
     private String basicTime;
 
     public TopTimeParser(String file, String timeZone) throws IllegalArgumentException
@@ -28,7 +25,7 @@ public class TopTimeParser implements TimeParser
         {
             throw new IllegalArgumentException();
         }
-        this.basicTime = matcher.group(0).replaceAll("-", "");
+        basicTime = matcher.group(0).replaceAll("-", "");
 
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone(timeZone));
     }
@@ -41,9 +38,8 @@ public class TopTimeParser implements TimeParser
         if (matcher.find())
         {
             String timeString = basicTime + matcher.group(1);
-            long time = DATE_FORMAT.parse(timeString).getTime();
 
-            lastTime = time;
+            lastTime = DATE_FORMAT.parse(timeString).getTime();
         }
 
         return lastTime;

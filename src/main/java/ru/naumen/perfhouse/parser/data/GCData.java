@@ -1,4 +1,4 @@
-package ru.naumen.perfhouse.parser;
+package ru.naumen.perfhouse.parser.data;
 
 import static ru.naumen.perfhouse.parser.NumberUtils.getSafeDouble;
 import static ru.naumen.perfhouse.parser.NumberUtils.roundToTwoPlaces;

@@ -54,7 +54,7 @@ public class StorageTest {
     @Test
     public void mustSave() {
         //when
-        storage.save();
+        storage.close();
 
         //then
         Mockito.verify(mockedInfluxDao).writeBatch(batchPoints);
@@ -90,7 +90,7 @@ public class StorageTest {
     public void mustStoreActions() {
         //when
         DataSet firstSet = storage.get(1);
-        firstSet.getActionsDone().parseLine("Done(10): AddObjectAction");
+        firstSet.getActionsDone().getTimes().add(10);
         storage.get(2);
 
         //then
@@ -102,7 +102,7 @@ public class StorageTest {
     public void mustNotStore() {
         //when
         storage.get(1);
-        storage.save();
+        storage.close();
 
         //then
         Mockito.verify(mockedInfluxDao, Mockito.never()).storeGc(
@@ -118,37 +118,27 @@ public class StorageTest {
     public void mustSaveFirstSet() {
         //when
         DataSet firstSet = storage.get(1);
-        firstSet.getActionsDone().parseLine("Done(10): AddObjectAction");
-        storage.save();
+        firstSet.getGc().addValue(1.5);
+        storage.close();
 
         //then
-        Mockito.verify(mockedInfluxDao).storeActionsFromLog(batchPoints, "test",
-                1, firstSet.getActionsDone(), firstSet.getErrors());
+        Mockito.verify(mockedInfluxDao)
+                .storeGc(batchPoints, "test", 1, firstSet.getGc());
     }
 
     @Test
     public void mustSaveLastSet() {
         //when
         DataSet firstSet = storage.get(1);
-        firstSet.getActionsDone().parseLine("Done(10): AddObjectAction");
+        firstSet.getGc().addValue(1.5);
         DataSet secondSet = storage.get(2);
-        secondSet.getActionsDone().parseLine("Done(5): GetCatalogsAction");
-        storage.save();
+        secondSet.getGc().addValue(3);
+        storage.close();
 
         //then
-        Mockito.verify(mockedInfluxDao).storeActionsFromLog(batchPoints, "test",
-                1, firstSet.getActionsDone(), firstSet.getErrors());
-        Mockito.verify(mockedInfluxDao).storeActionsFromLog(batchPoints, "test",
-                2, secondSet.getActionsDone(), secondSet.getErrors());
-    }
-
-    @Test
-    public void mustStartBatchPointsAfterSave() {
-        //when
-        storage.get(1).getActionsDone().parseLine("Done(10): AddObjectAction");
-        storage.save();
-
-        //then
-        Mockito.verify(mockedInfluxDao, Mockito.times(2)).startBatchPoints("test");
+        Mockito.verify(mockedInfluxDao)
+                .storeGc(batchPoints, "test", 1, firstSet.getGc());
+        Mockito.verify(mockedInfluxDao)
+                .storeGc(batchPoints, "test", 2, secondSet.getGc());
     }
 }

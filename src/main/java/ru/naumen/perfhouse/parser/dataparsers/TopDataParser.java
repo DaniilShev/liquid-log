@@ -1,15 +1,9 @@
-package ru.naumen.perfhouse.parser.data;
+package ru.naumen.perfhouse.parser.dataparsers;
 
+import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.parser.DataParser;
 import ru.naumen.perfhouse.parser.DataSet;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Map;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,11 +12,12 @@ import java.util.regex.Pattern;
  * @author dkolmogortsev
  *
  */
+@Service
 public class TopDataParser implements DataParser
 {
-    private Pattern cpuAndMemPattren = Pattern.compile(
+    private static final Pattern cpuAndMemPattern = Pattern.compile(
             "^ *\\d+ \\S+ +\\S+ +\\S+ +\\S+ +\\S+ +\\S+ +\\S+ \\S+ +(\\S+) +(\\S+) +\\S+ java");
-    private Pattern loadAvgPattern = Pattern.compile(".*load average:(.*)");
+    private static final Pattern loadAvgPattern = Pattern.compile(".*load average:(.*)");
 
     public void parseLine(String line, DataSet currentSet)
     {
@@ -35,7 +30,7 @@ public class TopDataParser implements DataParser
             return;
         }
 
-        Matcher cpuAndMemMatcher = cpuAndMemPattren.matcher(line);
+        Matcher cpuAndMemMatcher = cpuAndMemPattern.matcher(line);
         if (cpuAndMemMatcher.find())
         {
             currentSet.getCpuData().addCpu(Double.valueOf(cpuAndMemMatcher.group(1)));

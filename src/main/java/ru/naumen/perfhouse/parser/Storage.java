@@ -2,10 +2,18 @@ package ru.naumen.perfhouse.parser;
 
 import org.influxdb.dto.BatchPoints;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.influx.InfluxDAO;
+import ru.naumen.perfhouse.parser.data.ActionDoneData;
+import ru.naumen.perfhouse.parser.data.ErrorData;
+import ru.naumen.perfhouse.parser.data.GCData;
+import ru.naumen.perfhouse.parser.data.TopData;
+
+import javax.annotation.PreDestroy;
 
 @Service
+@Scope("request")
 class Storage {
     private String currentDb;
     private boolean log;
@@ -19,16 +27,12 @@ class Storage {
         this.influxDAO = influxDAO;
     }
 
-    private void startBatchPoints() {
-        points = influxDAO.startBatchPoints(currentDb);
-    }
-
     void init(String dbName, boolean printLog) {
         currentDb = dbName.replaceAll("-", "_");
         log = printLog;
 
         influxDAO.connectToDB(currentDb);
-        startBatchPoints();
+        points = influxDAO.startBatchPoints(currentDb);
 
         if (log)
         {
@@ -52,9 +56,9 @@ class Storage {
             return;
         }
 
-        ActionDoneParser dones = currentSet.getActionsDone();
+        ActionDoneData dones = currentSet.getActionsDone();
         dones.calculate();
-        ErrorParser erros = currentSet.getErrors();
+        ErrorData erros = currentSet.getErrors();
 
         if (log)
         {
@@ -85,9 +89,8 @@ class Storage {
         }
     }
 
-    void save() {
+    void close() {
         store();
         influxDAO.writeBatch(points);
-        startBatchPoints();
     }
 }
