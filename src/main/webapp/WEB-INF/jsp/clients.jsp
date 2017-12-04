@@ -67,11 +67,10 @@
                         complete: function(response, status) {
                            if (status === "parsererror" && response.responseText == "") {
                               $('#parserResult').text("Success!")
-
-                              return;
+                           } else {
+                              $('#parserResult').text("Error: " + response.responseJSON.message + "!")
                            }
 
-                           $('#parserResult').text("Error: " + response.responseJSON.message + "!")
                            $("#parserForm .modal-body *").prop("disabled", false)
                            $("#parseButton").text('Parse').prop('disabled', false)
                         },

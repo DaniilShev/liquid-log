@@ -1,6 +1,6 @@
 package ru.naumen.perfhouse.parser;
 
-public interface DataParser
+public interface DataParser<T extends DataSet>
 {
-    void parseLine(String line, DataSet currentSet);
+    void parseLine(String line, T currentSet);
 }

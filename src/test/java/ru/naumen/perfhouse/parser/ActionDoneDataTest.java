@@ -3,17 +3,17 @@ package ru.naumen.perfhouse.parser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import ru.naumen.perfhouse.parser.data.ActionDoneData;
-import ru.naumen.perfhouse.parser.dataparsers.ActionDoneDataParser;
+import ru.naumen.perfhouse.parser.parsers.data.ActionDoneDataParser;
+import ru.naumen.perfhouse.parser.sets.SdngDataSet;
 
 public class ActionDoneDataTest {
     private ActionDoneDataParser parser;
-    private DataSet dataSet;
+    private SdngDataSet dataSet;
 
     @Before
     public void initInfluxDAO() {
         parser = new ActionDoneDataParser();
-        dataSet = new DataSet();
+        dataSet = new SdngDataSet();
     }
 
     @Test
@@ -22,7 +22,7 @@ public class ActionDoneDataTest {
         parser.parseLine("Done(10): AddObjectAction", dataSet);
 
         //then
-        Assert.assertEquals(1, dataSet.getActionsDone().getAddObjectActions());
+        Assert.assertEquals(1, dataSet.getData().getX().getAddObjectActions());
     }
 
     @Test
@@ -32,7 +32,7 @@ public class ActionDoneDataTest {
         parser.parseLine("Done(1): GetAddFormContextDataAction", dataSet);
 
         //then
-        Assert.assertEquals(2, dataSet.getActionsDone().getFormActions());
+        Assert.assertEquals(2, dataSet.getData().getX().getFormActions());
     }
 
     @Test
@@ -41,7 +41,7 @@ public class ActionDoneDataTest {
         parser.parseLine("Done(10): EditObjectAction", dataSet);
 
         //then
-        Assert.assertEquals(1, dataSet.getActionsDone().getEditObjectsActions());
+        Assert.assertEquals(1, dataSet.getData().getX().getEditObjectsActions());
     }
 
     @Test
@@ -50,7 +50,7 @@ public class ActionDoneDataTest {
         parser.parseLine("Done(10): GetCatalogsAction", dataSet);
 
         //then
-        Assert.assertEquals(1, dataSet.getActionsDone().getCatalogsActions());
+        Assert.assertEquals(1, dataSet.getData().getX().getCatalogsActions());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class ActionDoneDataTest {
         parser.parseLine("Done(10): ExtendedSearchByFilterAction", dataSet);
 
         //then
-        Assert.assertEquals(7, dataSet.getActionsDone().getSearchActions());
+        Assert.assertEquals(7, dataSet.getData().getX().getSearchActions());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class ActionDoneDataTest {
         parser.parseLine("Done(10): GetDtObjectForRelObjListAction", dataSet);
 
         //then:
-        Assert.assertEquals(7, dataSet.getActionsDone().getListActions());
+        Assert.assertEquals(7, dataSet.getData().getX().getListActions());
     }
 
     @Test
@@ -94,7 +94,7 @@ public class ActionDoneDataTest {
         parser.parseLine("Done(10): GetCommentDtObjectTemplateAction", dataSet);
 
         //then:
-        Assert.assertEquals(6, dataSet.getActionsDone().getCommentActions());
+        Assert.assertEquals(6, dataSet.getData().getX().getCommentActions());
     }
 
     @Test
@@ -107,7 +107,7 @@ public class ActionDoneDataTest {
         parser.parseLine("Done(10): GetDtObjectTemplateAction", dataSet);
 
         //then:
-        Assert.assertEquals(5, dataSet.getActionsDone().getDtObjectActions());
+        Assert.assertEquals(5, dataSet.getData().getX().getDtObjectActions());
     }
 
 }

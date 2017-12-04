@@ -6,7 +6,7 @@ import static ru.naumen.perfhouse.parser.NumberUtils.roundToTwoPlaces;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 /**
- * Cpu usage dataparsers, acquired from top output
+ * Cpu usage data, acquired from top output
  * @author dkolmogortsev
  *
  */
