@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 import ru.naumen.perfhouse.influx.InfluxDAO;
 import ru.naumen.perfhouse.parser.factories.GCParserFactory;
 import ru.naumen.perfhouse.parser.packers.GCStoragePacker;
-import ru.naumen.perfhouse.parser.sets.GCDataSet;
+import ru.naumen.perfhouse.parser.data.GCData;
 
 public class GCStoragePackerTest {
     private InfluxDAO mockedInfluxDao;
@@ -31,13 +31,13 @@ public class GCStoragePackerTest {
     @Test
     public void mustStore() {
         //when
-        GCDataSet firstSet = (GCDataSet)storage.get(1);
-        firstSet.getData().addValue(1.5);
+        GCData firstSet = (GCData)storage.get(1);
+        firstSet.addValue(1.5);
         storage.get(2);
 
         //then
         Mockito.verify(mockedInfluxDao)
-                .storeGc(batchPoints, "test", 1, firstSet.getData());
+                .storeGc(batchPoints, "test", 1, firstSet);
     }
 
     @Test

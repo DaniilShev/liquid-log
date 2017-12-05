@@ -5,5 +5,4 @@ package ru.naumen.perfhouse.parser;
  */
 public interface DataSet
 {
-    Object getData();
 }

@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 import ru.naumen.perfhouse.influx.InfluxDAO;
 import ru.naumen.perfhouse.parser.factories.SdngParserFactory;
 import ru.naumen.perfhouse.parser.packers.SdngStoragePacker;
-import ru.naumen.perfhouse.parser.sets.SdngDataSet;
+import ru.naumen.perfhouse.parser.data.SdngData;
 
 public class SdngStoragePackerTest {
     private InfluxDAO mockedInfluxDao;
@@ -31,13 +31,13 @@ public class SdngStoragePackerTest {
     @Test
     public void mustStore() {
         //when
-        SdngDataSet firstSet = (SdngDataSet)storage.get(1);
-        firstSet.getData().getX().getTimes().add(10);
+        SdngData firstSet = (SdngData)storage.get(1);
+        firstSet.getActionDone().getTimes().add(10);
         storage.get(2);
 
         //then
         Mockito.verify(mockedInfluxDao).storeActionsFromLog(batchPoints, "test",
-                1, firstSet.getData().getX(), firstSet.getData().getY());
+                1, firstSet.getActionDone(), firstSet.getErrors());
     }
 
     @Test

@@ -6,10 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.influx.InfluxDAO;
 import ru.naumen.perfhouse.parser.StoragePacker;
 import ru.naumen.perfhouse.parser.data.GCData;
-import ru.naumen.perfhouse.parser.sets.GCDataSet;
 
 @Service
-public class GCStoragePacker implements StoragePacker<GCDataSet> {
+public class GCStoragePacker implements StoragePacker<GCData> {
     private InfluxDAO influxDAO;
 
     @Autowired
@@ -18,11 +17,10 @@ public class GCStoragePacker implements StoragePacker<GCDataSet> {
     }
 
     public void store(BatchPoints points, String currentDb, long currentKey,
-                      GCDataSet currentSet, boolean printLog) {
-        GCData gc = currentSet.getData();
-        if (!gc.isNan())
+                      GCData currentSet, boolean printLog) {
+        if (!currentSet.isNan())
         {
-            influxDAO.storeGc(points, currentDb, currentKey, gc);
+            influxDAO.storeGc(points, currentDb, currentKey, currentSet);
         }
     }
 }

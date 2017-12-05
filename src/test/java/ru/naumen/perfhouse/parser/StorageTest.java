@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import ru.naumen.perfhouse.influx.InfluxDAO;
-import ru.naumen.perfhouse.parser.sets.SdngDataSet;
+import ru.naumen.perfhouse.parser.data.SdngData;
 
 public class StorageTest {
     private InfluxDAO mockedInfluxDao;
@@ -24,7 +24,7 @@ public class StorageTest {
         Mockito.when(mockedInfluxDao.startBatchPoints("test"))
                 .thenReturn(batchPoints);
         Mockito.when(mockedParserFactory.getDataSet())
-                .thenReturn(new SdngDataSet());
+                .thenReturn(new SdngData());
 
         storage = new Storage(mockedInfluxDao);
         storage.init(mockedParserFactory, mockedStoragePacker, "test", false);

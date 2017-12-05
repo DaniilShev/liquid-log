@@ -1,20 +1,12 @@
 package ru.naumen.perfhouse.parser.data;
 
-import static ru.naumen.perfhouse.parser.NumberUtils.getSafeDouble;
-import static ru.naumen.perfhouse.parser.NumberUtils.roundToTwoPlaces;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import ru.naumen.perfhouse.parser.DataSet;
 
-public class GCData
+import static ru.naumen.perfhouse.parser.NumberUtils.getSafeDouble;
+import static ru.naumen.perfhouse.parser.NumberUtils.roundToTwoPlaces;
+
+public class GCData implements DataSet
 {
     private DescriptiveStatistics ds = new DescriptiveStatistics();
 

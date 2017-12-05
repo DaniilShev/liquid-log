@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 import ru.naumen.perfhouse.influx.InfluxDAO;
 import ru.naumen.perfhouse.parser.factories.TopParserFactory;
 import ru.naumen.perfhouse.parser.packers.TopStoragePacker;
-import ru.naumen.perfhouse.parser.sets.TopDataSet;
+import ru.naumen.perfhouse.parser.data.TopData;
 
 public class TopStoragePackerTest {
     private InfluxDAO mockedInfluxDao;
@@ -31,15 +31,15 @@ public class TopStoragePackerTest {
     @Test
     public void mustStore() {
         //when
-        TopDataSet firstSet = (TopDataSet)storage.get(1);
-        firstSet.getData().addCpu(1.5);
-        firstSet.getData().addLa(3.2);
-        firstSet.getData().addMem(2);
+        TopData firstSet = (TopData)storage.get(1);
+        firstSet.addCpu(1.5);
+        firstSet.addLa(3.2);
+        firstSet.addMem(2);
         storage.get(2);
 
         //then
         Mockito.verify(mockedInfluxDao)
-                .storeTop(batchPoints, "test", 1, firstSet.getData());
+                .storeTop(batchPoints, "test", 1, firstSet);
     }
 
     @Test

@@ -6,10 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.influx.InfluxDAO;
 import ru.naumen.perfhouse.parser.StoragePacker;
 import ru.naumen.perfhouse.parser.data.TopData;
-import ru.naumen.perfhouse.parser.sets.TopDataSet;
 
 @Service
-public class TopStoragePacker implements StoragePacker<TopDataSet> {
+public class TopStoragePacker implements StoragePacker<TopData> {
     private InfluxDAO influxDAO;
 
     @Autowired
@@ -18,11 +17,10 @@ public class TopStoragePacker implements StoragePacker<TopDataSet> {
     }
 
     public void store(BatchPoints points, String currentDb, long currentKey,
-                      TopDataSet currentSet, boolean printLog) {
-        TopData cpuData = currentSet.getData();
-        if (!cpuData.isNan())
+                      TopData currentSet, boolean printLog) {
+        if (!currentSet.isNan())
         {
-            influxDAO.storeTop(points, currentDb, currentKey, cpuData);
+            influxDAO.storeTop(points, currentDb, currentKey, currentSet);
         }
     }
 }

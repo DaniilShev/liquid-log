@@ -1,12 +1,12 @@
 package ru.naumen.perfhouse.parser.factories;
 
 import ru.naumen.perfhouse.parser.ParserFactory;
-import ru.naumen.perfhouse.parser.sets.GCDataSet;
+import ru.naumen.perfhouse.parser.data.GCData;
 
 public class GCParserFactory implements ParserFactory
 {
     @Override
-    public GCDataSet getDataSet () {
-        return new GCDataSet();
+    public GCData getDataSet () {
+        return new GCData();
     }
 }

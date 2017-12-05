@@ -5,13 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.influx.InfluxDAO;
 import ru.naumen.perfhouse.parser.StoragePacker;
-import ru.naumen.perfhouse.parser.Tuple;
 import ru.naumen.perfhouse.parser.data.ActionDoneData;
 import ru.naumen.perfhouse.parser.data.ErrorData;
-import ru.naumen.perfhouse.parser.sets.SdngDataSet;
+import ru.naumen.perfhouse.parser.data.SdngData;
 
 @Service
-public class SdngStoragePacker implements StoragePacker<SdngDataSet> {
+public class SdngStoragePacker implements StoragePacker<SdngData> {
     private InfluxDAO influxDAO;
 
     @Autowired
@@ -20,13 +19,12 @@ public class SdngStoragePacker implements StoragePacker<SdngDataSet> {
     }
 
     public void store(BatchPoints points, String currentDb, long currentKey,
-                 SdngDataSet currentSet, boolean printLog) {
-        Tuple<ActionDoneData, ErrorData> data = currentSet.getData();
+                      SdngData currentSet, boolean printLog) {
 
-        ActionDoneData dones = data.getX();
+        ActionDoneData dones = currentSet.getActionDone();
         dones.calculate();
 
-        ErrorData erros = data.getY();
+        ErrorData erros = currentSet.getErrors();
 
         if (printLog)
         {
