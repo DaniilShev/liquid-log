@@ -8,8 +8,10 @@ import java.text.ParseException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.naumen.perfhouse.parser.dataparsers.*;
-import ru.naumen.perfhouse.parser.timeparsers.*;
+import ru.naumen.perfhouse.parser.packers.*;
+import ru.naumen.perfhouse.parser.parsers.data.*;
+import ru.naumen.perfhouse.parser.factories.*;
+import ru.naumen.perfhouse.parser.parsers.time.*;
 
 /**
  * Created by doki on 22.10.16.
@@ -24,17 +26,26 @@ public class Parser
     private TopDataParser topDataParser;
     private GCDataParser gcDataParser;
 
+    private SdngStoragePacker sdngStoragePacker;
+    private TopStoragePacker topStoragePacker;
+    private GCStoragePacker gcStoragePacker;
+
     @Autowired
     public Parser(BeanFactory factory, TopDataParser topDataParser,
                   GCDataParser gcDataParser,
                   ActionDoneDataParser actionDoneDataParser,
-                  ErrorDataParser errorDataParser) {
+                  ErrorDataParser errorDataParser, SdngStoragePacker sdngStoragePacker,
+                  TopStoragePacker topStoragePacker, GCStoragePacker gcStoragePacker) {
         this.factory = factory;
 
         this.sdngDataParser = new CompositeDataParser(actionDoneDataParser,
                 errorDataParser);
         this.topDataParser = topDataParser;
         this.gcDataParser = gcDataParser;
+
+        this.sdngStoragePacker = sdngStoragePacker;
+        this.topStoragePacker = topStoragePacker;
+        this.gcStoragePacker = gcStoragePacker;
     }
 
     /**
@@ -45,36 +56,45 @@ public class Parser
      * @param timeZone - Time zone
      * @param printLog - Should print logs in console
      * @throws IOException - Can fall when reading new line
-     * @throws ParseException - Can fall when parsing timeparsers from line
+     * @throws ParseException - Can fall when parsing time from line
      */
     public void parse(String dbName, String parsingMode, String logPath,
                       String timeZone, Boolean printLog)
             throws IOException, ParseException
     {
-        Storage storage = factory.getBean(Storage.class);
-        storage.init(dbName, printLog);
 
+        ParserFactory parserFactory;
         TimeParser timeParser;
         DataParser dataParser;
+        StoragePacker storagePacker;
 
         switch (parsingMode)
         {
             case "sdng":
+                parserFactory = new SdngParserFactory();
                 timeParser = new SdngTimeParser(timeZone);
                 dataParser = sdngDataParser;
+                storagePacker = sdngStoragePacker;
                 break;
             case "gc":
+                parserFactory = new GCParserFactory();
                 timeParser = new GCTimeParser(timeZone);
                 dataParser = gcDataParser;
+                storagePacker = gcStoragePacker;
                 break;
             case "top":
+                parserFactory = new TopParserFactory();
                 timeParser = new TopTimeParser(logPath, timeZone);
                 dataParser = topDataParser;
+                storagePacker = topStoragePacker;
                 break;
             default:
                 throw new IllegalArgumentException(
-                        "Unknown parse mode! Availiable modes: sdng, gc, top. Requested mode: " + parsingMode);
+                        "Unknown parse mode! Available modes: sdng, gc, top. Requested mode: " + parsingMode);
         }
+
+        Storage storage = factory.getBean(Storage.class);
+        storage.init(parserFactory, storagePacker, dbName, printLog);
 
         try (BufferedReader br = new BufferedReader(new FileReader(logPath), 32 * 1024 * 1024))
         {

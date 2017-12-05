@@ -1,16 +1,17 @@
 package ru.naumen.perfhouse.parser.data;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import ru.naumen.perfhouse.parser.DataSet;
+
 import static ru.naumen.perfhouse.parser.NumberUtils.getSafeDouble;
 import static ru.naumen.perfhouse.parser.NumberUtils.roundToTwoPlaces;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-
 /**
- * Cpu usage dataparsers, acquired from top output
+ * Cpu usage data, acquired from top output
  * @author dkolmogortsev
  *
  */
-public class TopData
+public class TopData implements DataSet
 {
     private DescriptiveStatistics loadAvgStat = new DescriptiveStatistics();
     private DescriptiveStatistics cpuStat = new DescriptiveStatistics();

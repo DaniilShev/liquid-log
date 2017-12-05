@@ -1,9 +1,9 @@
-package ru.naumen.perfhouse.parser.dataparsers;
+package ru.naumen.perfhouse.parser.parsers.data;
 
 import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.parser.DataParser;
-import ru.naumen.perfhouse.parser.DataSet;
 import ru.naumen.perfhouse.parser.data.ActionDoneData;
+import ru.naumen.perfhouse.parser.data.SdngData;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * Created by doki on 22.10.16.
  */
 @Service
-public class ActionDoneDataParser implements DataParser {
+public class ActionDoneDataParser implements DataParser<SdngData> {
     private static final Pattern doneRegEx = Pattern.compile("Done\\((\\d+)\\): ?(.*?Action)");
 
     private static Set<String> EXCLUDED_ACTIONS = new HashSet<>();
@@ -23,7 +23,7 @@ public class ActionDoneDataParser implements DataParser {
     }
 
     @Override
-    public void parseLine(String line, DataSet currentSet) {
+    public void parseLine(String line, SdngData currentSet) {
         Matcher matcher = doneRegEx.matcher(line);
 
         if (!matcher.find()) {
@@ -35,7 +35,7 @@ public class ActionDoneDataParser implements DataParser {
             return;
         }
 
-        ActionDoneData actionDoneData = currentSet.getActionsDone();
+        ActionDoneData actionDoneData = currentSet.getActionDone();
 
         actionDoneData.getTimes().add(Integer.parseInt(matcher.group(1)));
         if (actionInLowerCase.equals("addobjectaction")) {

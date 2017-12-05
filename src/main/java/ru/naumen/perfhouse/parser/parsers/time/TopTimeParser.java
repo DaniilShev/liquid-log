@@ -1,4 +1,4 @@
-package ru.naumen.perfhouse.parser.timeparsers;
+package ru.naumen.perfhouse.parser.parsers.time;
 
 import ru.naumen.perfhouse.parser.TimeParser;
 
