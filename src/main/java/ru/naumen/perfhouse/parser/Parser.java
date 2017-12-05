@@ -66,7 +66,7 @@ public class Parser
         ParserFactory parserFactory;
         TimeParser timeParser;
         DataParser dataParser;
-        DataPacker dataPacker;
+        StoragePacker storagePacker;
 
         switch (parsingMode)
         {
@@ -74,19 +74,19 @@ public class Parser
                 parserFactory = new SdngParserFactory();
                 timeParser = new SdngTimeParser(timeZone);
                 dataParser = sdngDataParser;
-                dataPacker = sdngStoragePacker;
+                storagePacker = sdngStoragePacker;
                 break;
             case "gc":
                 parserFactory = new GCParserFactory();
                 timeParser = new GCTimeParser(timeZone);
                 dataParser = gcDataParser;
-                dataPacker = gcStoragePacker;
+                storagePacker = gcStoragePacker;
                 break;
             case "top":
                 parserFactory = new TopParserFactory();
                 timeParser = new TopTimeParser(logPath, timeZone);
                 dataParser = topDataParser;
-                dataPacker = topStoragePacker;
+                storagePacker = topStoragePacker;
                 break;
             default:
                 throw new IllegalArgumentException(
@@ -94,7 +94,7 @@ public class Parser
         }
 
         Storage storage = factory.getBean(Storage.class);
-        storage.init(parserFactory, dataPacker, dbName, printLog);
+        storage.init(parserFactory, storagePacker, dbName, printLog);
 
         try (BufferedReader br = new BufferedReader(new FileReader(logPath), 32 * 1024 * 1024))
         {

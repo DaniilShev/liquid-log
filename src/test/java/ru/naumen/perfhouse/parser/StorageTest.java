@@ -10,7 +10,7 @@ import ru.naumen.perfhouse.parser.sets.SdngDataSet;
 public class StorageTest {
     private InfluxDAO mockedInfluxDao;
     private ParserFactory mockedParserFactory;
-    private DataPacker mockedDataPacker;
+    private StoragePacker mockedStoragePacker;
     private BatchPoints batchPoints;
     private Storage storage;
 
@@ -18,7 +18,7 @@ public class StorageTest {
     public void init() {
         mockedInfluxDao = Mockito.mock(InfluxDAO.class);
         mockedParserFactory = Mockito.mock(ParserFactory.class);
-        mockedDataPacker = Mockito.mock(DataPacker.class);
+        mockedStoragePacker = Mockito.mock(StoragePacker.class);
 
         batchPoints = BatchPoints.database("test").build();
         Mockito.when(mockedInfluxDao.startBatchPoints("test"))
@@ -27,7 +27,7 @@ public class StorageTest {
                 .thenReturn(new SdngDataSet());
 
         storage = new Storage(mockedInfluxDao);
-        storage.init(mockedParserFactory, mockedDataPacker, "test", false);
+        storage.init(mockedParserFactory, mockedStoragePacker, "test", false);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class StorageTest {
     @Test
     public void mustReturnNewSet() {
         //given
-        storage.init(mockedParserFactory, mockedDataPacker, "test", true);
+        storage.init(mockedParserFactory, mockedStoragePacker, "test", true);
 
         //when
         DataSet firstSet = storage.get(1);
@@ -69,7 +69,7 @@ public class StorageTest {
         storage.get(2);
 
         //then
-        Mockito.verify(mockedDataPacker).store(batchPoints, "test", 1, firstSet, false);
+        Mockito.verify(mockedStoragePacker).store(batchPoints, "test", 1, firstSet, false);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class StorageTest {
         storage.close();
 
         //then
-        Mockito.verify(mockedDataPacker).store(batchPoints, "test", 1, firstSet, false);
+        Mockito.verify(mockedStoragePacker).store(batchPoints, "test", 1, firstSet, false);
     }
 
     @Test
@@ -90,6 +90,6 @@ public class StorageTest {
         storage.close();
 
         //then
-        Mockito.verify(mockedDataPacker).store(batchPoints, "test", 2, secondSet, false);
+        Mockito.verify(mockedStoragePacker).store(batchPoints, "test", 2, secondSet, false);
     }
 }

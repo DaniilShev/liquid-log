@@ -4,12 +4,12 @@ import org.influxdb.dto.BatchPoints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.influx.InfluxDAO;
-import ru.naumen.perfhouse.parser.DataPacker;
+import ru.naumen.perfhouse.parser.StoragePacker;
 import ru.naumen.perfhouse.parser.data.GCData;
 import ru.naumen.perfhouse.parser.sets.GCDataSet;
 
 @Service
-public class GCStoragePacker implements DataPacker<GCDataSet> {
+public class GCStoragePacker implements StoragePacker<GCDataSet> {
     private InfluxDAO influxDAO;
 
     @Autowired

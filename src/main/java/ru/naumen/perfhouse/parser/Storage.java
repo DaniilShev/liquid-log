@@ -15,7 +15,7 @@ class Storage {
     private DataSet currentSet;
     private BatchPoints points;
     private InfluxDAO influxDAO;
-    private DataPacker dataPacker;
+    private StoragePacker storagePacker;
     private ParserFactory parserFactory;
 
     @Autowired
@@ -23,9 +23,9 @@ class Storage {
         this.influxDAO = influxDAO;
     }
 
-    void init(ParserFactory parserFactory, DataPacker dataPacker, String dbName, boolean printLog) {
+    void init(ParserFactory parserFactory, StoragePacker storagePacker, String dbName, boolean printLog) {
         this.parserFactory = parserFactory;
-        this.dataPacker = dataPacker;
+        this.storagePacker = storagePacker;
 
         currentDb = dbName.replaceAll("-", "_");
         this.printLog = printLog;
@@ -50,7 +50,7 @@ class Storage {
             return;
         }
 
-        dataPacker.store(points, currentDb, currentKey, currentSet, printLog);
+        storagePacker.store(points, currentDb, currentKey, currentSet, printLog);
     }
 
     void close() {

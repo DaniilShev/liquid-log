@@ -18,14 +18,14 @@ public class TopStoragePackerTest {
     public void init() {
         mockedInfluxDao = Mockito.mock(InfluxDAO.class);
         ParserFactory parserFactory = new TopParserFactory();
-        DataPacker dataPacker = new TopStoragePacker(mockedInfluxDao);
+        StoragePacker storagePacker = new TopStoragePacker(mockedInfluxDao);
 
         batchPoints = BatchPoints.database("test").build();
         Mockito.when(mockedInfluxDao.startBatchPoints("test"))
                 .thenReturn(batchPoints);
 
         storage = new Storage(mockedInfluxDao);
-        storage.init(parserFactory, dataPacker, "test", false);
+        storage.init(parserFactory, storagePacker, "test", false);
     }
 
     @Test

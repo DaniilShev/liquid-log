@@ -18,14 +18,14 @@ public class GCStoragePackerTest {
     public void init() {
         mockedInfluxDao = Mockito.mock(InfluxDAO.class);
         ParserFactory parserFactory = new GCParserFactory();
-        DataPacker dataPacker = new GCStoragePacker(mockedInfluxDao);
+        StoragePacker storagePacker = new GCStoragePacker(mockedInfluxDao);
 
         batchPoints = BatchPoints.database("test").build();
         Mockito.when(mockedInfluxDao.startBatchPoints("test"))
                 .thenReturn(batchPoints);
 
         storage = new Storage(mockedInfluxDao);
-        storage.init(parserFactory, dataPacker, "test", false);
+        storage.init(parserFactory, storagePacker, "test", false);
     }
 
     @Test

@@ -4,14 +4,14 @@ import org.influxdb.dto.BatchPoints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.influx.InfluxDAO;
-import ru.naumen.perfhouse.parser.DataPacker;
+import ru.naumen.perfhouse.parser.StoragePacker;
 import ru.naumen.perfhouse.parser.Tuple;
 import ru.naumen.perfhouse.parser.data.ActionDoneData;
 import ru.naumen.perfhouse.parser.data.ErrorData;
 import ru.naumen.perfhouse.parser.sets.SdngDataSet;
 
 @Service
-public class SdngStoragePacker implements DataPacker<SdngDataSet> {
+public class SdngStoragePacker implements StoragePacker<SdngDataSet> {
     private InfluxDAO influxDAO;
 
     @Autowired
