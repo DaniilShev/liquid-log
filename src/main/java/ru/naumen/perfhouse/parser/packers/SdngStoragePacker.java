@@ -15,7 +15,7 @@ public class SdngStoragePacker implements DataPacker<SdngDataSet> {
     private InfluxDAO influxDAO;
 
     @Autowired
-    SdngStoragePacker(InfluxDAO influxDAO) {
+    public SdngStoragePacker(InfluxDAO influxDAO) {
         this.influxDAO = influxDAO;
     }
 

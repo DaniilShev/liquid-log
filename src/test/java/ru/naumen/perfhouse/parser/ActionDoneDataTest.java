@@ -11,7 +11,7 @@ public class ActionDoneDataTest {
     private SdngDataSet dataSet;
 
     @Before
-    public void initInfluxDAO() {
+    public void init() {
         parser = new ActionDoneDataParser();
         dataSet = new SdngDataSet();
     }

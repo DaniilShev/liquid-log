@@ -15,7 +15,7 @@ public class StorageTest {
     private Storage storage;
 
     @Before
-    public void initInfluxDAO() {
+    public void init() {
         mockedInfluxDao = Mockito.mock(InfluxDAO.class);
         mockedParserFactory = Mockito.mock(ParserFactory.class);
         mockedDataPacker = Mockito.mock(DataPacker.class);
@@ -23,12 +23,10 @@ public class StorageTest {
         batchPoints = BatchPoints.database("test").build();
         Mockito.when(mockedInfluxDao.startBatchPoints("test"))
                 .thenReturn(batchPoints);
-
         Mockito.when(mockedParserFactory.getDataSet())
                 .thenReturn(new SdngDataSet());
 
         storage = new Storage(mockedInfluxDao);
-
         storage.init(mockedParserFactory, mockedDataPacker, "test", false);
     }
 

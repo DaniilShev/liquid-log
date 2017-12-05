@@ -13,7 +13,7 @@ public class GCStoragePacker implements DataPacker<GCDataSet> {
     private InfluxDAO influxDAO;
 
     @Autowired
-    GCStoragePacker(InfluxDAO influxDAO) {
+    public GCStoragePacker(InfluxDAO influxDAO) {
         this.influxDAO = influxDAO;
     }
 

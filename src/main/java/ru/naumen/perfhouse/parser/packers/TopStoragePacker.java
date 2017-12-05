@@ -13,7 +13,7 @@ public class TopStoragePacker implements DataPacker<TopDataSet> {
     private InfluxDAO influxDAO;
 
     @Autowired
-    TopStoragePacker(InfluxDAO influxDAO) {
+    public TopStoragePacker(InfluxDAO influxDAO) {
         this.influxDAO = influxDAO;
     }
 
