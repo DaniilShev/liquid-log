@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.parser.packers.*;
 import ru.naumen.perfhouse.parser.parsers.data.*;
 import ru.naumen.perfhouse.parser.factories.*;
-import ru.naumen.perfhouse.parser.parsers.time.*;
 
 /**
  * Created by doki on 22.10.16.
@@ -30,12 +29,18 @@ public class Parser
     private TopStoragePacker topStoragePacker;
     private GCStoragePacker gcStoragePacker;
 
+    private SdngParserFactory sdngParserFactory;
+    private TopParserFactory topParserFactory;
+    private GCParserFactory gcParserFactory;
+
     @Autowired
     public Parser(BeanFactory factory, TopDataParser topDataParser,
                   GCDataParser gcDataParser,
                   ActionDoneDataParser actionDoneDataParser,
                   ErrorDataParser errorDataParser, SdngStoragePacker sdngStoragePacker,
-                  TopStoragePacker topStoragePacker, GCStoragePacker gcStoragePacker) {
+                  TopStoragePacker topStoragePacker, GCStoragePacker gcStoragePacker,
+                  SdngParserFactory sdngParserFactory, TopParserFactory topParserFactory,
+                  GCParserFactory gcParserFactory) {
         this.factory = factory;
 
         this.sdngDataParser = new CompositeDataParser(actionDoneDataParser,
@@ -46,6 +51,10 @@ public class Parser
         this.sdngStoragePacker = sdngStoragePacker;
         this.topStoragePacker = topStoragePacker;
         this.gcStoragePacker = gcStoragePacker;
+
+        this.sdngParserFactory = sdngParserFactory;
+        this.topParserFactory = topParserFactory;
+        this.gcParserFactory = gcParserFactory;
     }
 
     /**
@@ -64,27 +73,22 @@ public class Parser
     {
 
         ParserFactory parserFactory;
-        TimeParser timeParser;
         DataParser dataParser;
         StoragePacker storagePacker;
-
         switch (parsingMode)
         {
             case "sdng":
-                parserFactory = new SdngParserFactory();
-                timeParser = new SdngTimeParser(timeZone);
+                parserFactory = sdngParserFactory;
                 dataParser = sdngDataParser;
                 storagePacker = sdngStoragePacker;
                 break;
             case "gc":
-                parserFactory = new GCParserFactory();
-                timeParser = new GCTimeParser(timeZone);
+                parserFactory = gcParserFactory;
                 dataParser = gcDataParser;
                 storagePacker = gcStoragePacker;
                 break;
             case "top":
-                parserFactory = new TopParserFactory();
-                timeParser = new TopTimeParser(logPath, timeZone);
+                parserFactory = topParserFactory;
                 dataParser = topDataParser;
                 storagePacker = topStoragePacker;
                 break;
@@ -96,6 +100,7 @@ public class Parser
         Storage storage = factory.getBean(Storage.class);
         storage.init(parserFactory, storagePacker, dbName, printLog);
 
+        TimeParser timeParser = parserFactory.getTimeParser(logPath, timeZone);
         try (BufferedReader br = new BufferedReader(new FileReader(logPath), 32 * 1024 * 1024))
         {
             String line;

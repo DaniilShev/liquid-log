@@ -1,5 +1,7 @@
 package ru.naumen.perfhouse.parser.parsers.time;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.parser.TimeParser;
 
 import java.text.ParseException;
@@ -12,6 +14,8 @@ import java.util.regex.Pattern;
 /**
  * Created by doki on 22.10.16.
  */
+@Service
+@Scope("request")
 public class SdngTimeParser implements TimeParser
 {
     private static final Pattern TIME_PATTERN = Pattern.compile(

@@ -1,5 +1,7 @@
 package ru.naumen.perfhouse.parser.parsers.time;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.parser.TimeParser;
 
 import java.text.ParseException;
@@ -8,6 +10,8 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Service
+@Scope("request")
 public class TopTimeParser implements TimeParser
 {
 
