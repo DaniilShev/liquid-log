@@ -5,11 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.influx.InfluxDAO;
 import ru.naumen.perfhouse.parser.StoragePacker;
+import ru.naumen.perfhouse.parser.annotation.ParsingMode;
 import ru.naumen.perfhouse.parser.data.ActionDoneData;
 import ru.naumen.perfhouse.parser.data.ErrorData;
 import ru.naumen.perfhouse.parser.data.SdngData;
 
 @Service
+@ParsingMode(name="sdng")
 public class SdngStoragePacker implements StoragePacker<SdngData> {
     private InfluxDAO influxDAO;
 

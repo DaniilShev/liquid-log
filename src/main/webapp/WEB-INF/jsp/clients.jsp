@@ -180,9 +180,9 @@
                         <div class="form-group">
                             <label for="parsingMode">Parsing mode</label>
                             <select class="form-control" id="parsingMode" name="parsingMode">
-                                <option>sdng</option>
-                                <option>gc</option>
-                                <option>top</option>
+                            <% for(String mode:(List<String>)request.getAttribute("parserModes")) { %>
+                                <option><%= mode %></option>
+                            <% } %>
                             </select>
                         </div>
                         <div class="form-group">

@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ru.naumen.perfhouse.influx.InfluxDAO;
 import ru.naumen.perfhouse.parser.Parser;
+import ru.naumen.perfhouse.parser.ParserModes;
 
 /**
  * Created by dkirpichenkov on 26.10.16.
@@ -33,12 +34,14 @@ public class ClientsController
     private Logger LOG = LoggerFactory.getLogger(ClientsController.class);
     private InfluxDAO influxDAO;
     private Parser parser;
+    private ParserModes parserModes;
 
     @Autowired
-    public ClientsController(InfluxDAO influxDAO, Parser parser)
+    public ClientsController(InfluxDAO influxDAO, Parser parser, ParserModes parserModes)
     {
         this.influxDAO = influxDAO;
         this.parser = parser;
+        this.parserModes = parserModes;
     }
 
     @RequestMapping(path = "/")
@@ -73,6 +76,7 @@ public class ClientsController
         model.put("last864links", clientLast864Links);
         model.put("last2016links", clientLast2016Links);
         model.put("prevMonthLinks", clientPreviousMonthLinks);
+        model.put("parserModes", parserModes.getModes());
 
         return new ModelAndView("clients", model, HttpStatus.OK);
     }
