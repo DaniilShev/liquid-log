@@ -2,6 +2,7 @@ package ru.naumen.perfhouse.parser.parsers.data;
 
 import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.parser.DataParser;
+import ru.naumen.perfhouse.parser.annotation.ParsingMode;
 import ru.naumen.perfhouse.parser.data.TopData;
 
 import java.util.regex.Matcher;
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
  *
  */
 @Service
+@ParsingMode(name="top")
 public class TopDataParser implements DataParser<TopData>
 {
     private static final Pattern cpuAndMemPattern = Pattern.compile(

@@ -1,16 +1,13 @@
 package ru.naumen.perfhouse.parser;
 
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.naumen.perfhouse.parser.packers.*;
-import ru.naumen.perfhouse.parser.parsers.data.*;
-import ru.naumen.perfhouse.parser.factories.*;
 
 /**
  * Created by doki on 22.10.16.
@@ -20,41 +17,12 @@ public class Parser
 {
 
     private BeanFactory factory;
-
-    private CompositeDataParser sdngDataParser;
-    private TopDataParser topDataParser;
-    private GCDataParser gcDataParser;
-
-    private SdngStoragePacker sdngStoragePacker;
-    private TopStoragePacker topStoragePacker;
-    private GCStoragePacker gcStoragePacker;
-
-    private SdngParserFactory sdngParserFactory;
-    private TopParserFactory topParserFactory;
-    private GCParserFactory gcParserFactory;
+    private ParserModes parserModes;
 
     @Autowired
-    public Parser(BeanFactory factory, TopDataParser topDataParser,
-                  GCDataParser gcDataParser,
-                  ActionDoneDataParser actionDoneDataParser,
-                  ErrorDataParser errorDataParser, SdngStoragePacker sdngStoragePacker,
-                  TopStoragePacker topStoragePacker, GCStoragePacker gcStoragePacker,
-                  SdngParserFactory sdngParserFactory, TopParserFactory topParserFactory,
-                  GCParserFactory gcParserFactory) {
+    public Parser(BeanFactory factory, ParserModes parserModes) {
         this.factory = factory;
-
-        this.sdngDataParser = new CompositeDataParser(actionDoneDataParser,
-                errorDataParser);
-        this.topDataParser = topDataParser;
-        this.gcDataParser = gcDataParser;
-
-        this.sdngStoragePacker = sdngStoragePacker;
-        this.topStoragePacker = topStoragePacker;
-        this.gcStoragePacker = gcStoragePacker;
-
-        this.sdngParserFactory = sdngParserFactory;
-        this.topParserFactory = topParserFactory;
-        this.gcParserFactory = gcParserFactory;
+        this.parserModes = parserModes;
     }
 
     /**
@@ -71,31 +39,14 @@ public class Parser
                       String timeZone, Boolean printLog)
             throws IOException, ParseException
     {
-
-        ParserFactory parserFactory;
-        DataParser dataParser;
-        StoragePacker storagePacker;
-        switch (parsingMode)
-        {
-            case "sdng":
-                parserFactory = sdngParserFactory;
-                dataParser = sdngDataParser;
-                storagePacker = sdngStoragePacker;
-                break;
-            case "gc":
-                parserFactory = gcParserFactory;
-                dataParser = gcDataParser;
-                storagePacker = gcStoragePacker;
-                break;
-            case "top":
-                parserFactory = topParserFactory;
-                dataParser = topDataParser;
-                storagePacker = topStoragePacker;
-                break;
-            default:
-                throw new IllegalArgumentException(
-                        "Unknown parse mode! Available modes: sdng, gc, top. Requested mode: " + parsingMode);
+        if (!parserModes.hasMode(parsingMode)) {
+            throw new IllegalArgumentException(
+                    String.format("Unknown parse mode! Available modes: %s. Requested mode: %s",
+                            String.join(",", parserModes.getModes()), parsingMode));
         }
+        ParserFactory parserFactory = parserModes.getParserFactory(parsingMode);
+        StoragePacker storagePacker = parserModes.getStoragePacker(parsingMode);
+        DataParser dataParser = parserModes.getDataParser(parsingMode);
 
         Storage storage = factory.getBean(Storage.class);
         storage.init(parserFactory, storagePacker, dbName, printLog);
