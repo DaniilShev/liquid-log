@@ -23,15 +23,7 @@ public interface InfluxDAO {
 
     BatchPoints startBatchPoints(String dbName);
 
-    void storeActionsFromLog(BatchPoints batch, String dbName, long date,
-                                    ActionDoneData dones,
-                             ErrorData errors);
-
     void storeFromJSon(BatchPoints batch, String dbName, JSONObject data);
-
-    void storeGc(BatchPoints batch, String dbName, long date, GCData gc);
-
-    void storeTop(BatchPoints batch, String dbName, long date, TopData data);
 
     void writeBatch(BatchPoints batch);
 }

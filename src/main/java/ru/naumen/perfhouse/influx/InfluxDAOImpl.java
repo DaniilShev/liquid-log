@@ -10,24 +10,12 @@ import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.Point;
-import org.influxdb.dto.Point.Builder;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import ru.naumen.perfhouse.plugins.gc.parser.GCData;
-import ru.naumen.perfhouse.plugins.sdng.parser.ActionDoneData;
-import ru.naumen.perfhouse.plugins.sdng.parser.ErrorData;
-import ru.naumen.perfhouse.plugins.top.parser.TopData;
-
-import ru.naumen.perfhouse.statdata.Constants;
-import static ru.naumen.perfhouse.plugins.gc.GCConstants.*;
-import static ru.naumen.perfhouse.plugins.sdng.ActionDoneConstants.*;
-import static ru.naumen.perfhouse.plugins.sdng.ResponseTimesConstants.*;
-import static ru.naumen.perfhouse.plugins.top.TopConstants.*;
 
 /**
  * Created by doki on 24.10.16.
@@ -92,45 +80,6 @@ public class InfluxDAOImpl implements InfluxDAO
         return BatchPoints.database(dbName).build();
     }
 
-    public void storeActionsFromLog(BatchPoints batch, String dbName, long date, ActionDoneData dones,
-            ErrorData errors)
-    {
-        //@formatter:off
-        Builder builder = Point.measurement(Constants.MEASUREMENT_NAME).time(date, TimeUnit.MILLISECONDS)
-                .addField(COUNT, dones.getCount())
-                .addField("min", dones.getMin())
-                .addField(MEAN, dones.getMean())
-                .addField(STDDEV, dones.getStddev())
-                .addField(PERCENTILE50, dones.getPercent50())
-                .addField(PERCENTILE95, dones.getPercent95())
-                .addField(PERCENTILE99, dones.getPercent99())
-                .addField(PERCENTILE999, dones.getPercent999())
-                .addField(MAX, dones.getMax())
-                .addField(ERRORS, errors.getErrorCount())
-                .addField(ADD_ACTIONS, dones.getAddObjectActions())
-                .addField(EDIT_ACTIONS, dones.getEditObjectsActions())
-                .addField(GET_CATALOGS_ACTIONS, dones.getCatalogsActions())
-                .addField(LIST_ACTIONS, dones.getListActions())
-                .addField(COMMENT_ACTIONS, dones.getCommentActions())
-                .addField(GET_FORM_ACTIONS, dones.getFormActions())
-                .addField(GET_DT_OBJECT_ACTIONS, dones.getDtObjectActions())
-                .addField(SEARCH_ACTIONS, dones.getSearchActions());
-
-
-        //@formatter:on
-
-        Point point = builder.build();
-
-        if (batch != null)
-        {
-            batch.getPoints().add(point);
-        }
-        else
-        {
-            influx.write(dbName, "autogen", point);
-        }
-    }
-
     public void storeFromJSon(BatchPoints batch, String dbName, JSONObject data)
     {
         influx.createDatabase(dbName);
@@ -158,38 +107,6 @@ public class InfluxDAOImpl implements InfluxDAO
         else
         {
             influx.write(dbName, "autogen", measure);
-        }
-    }
-
-    public void storeGc(BatchPoints batch, String dbName, long date, GCData gc)
-    {
-        Point point = Point.measurement(Constants.MEASUREMENT_NAME).time(date, TimeUnit.MILLISECONDS)
-                .addField(GCTIMES, gc.getGcTimes()).addField(AVARAGE_GC_TIME, gc.getCalculatedAvg())
-                .addField(MAX_GC_TIME, gc.getMaxGcTime()).build();
-
-        if (batch != null)
-        {
-            batch.getPoints().add(point);
-        }
-        else
-        {
-            influx.write(dbName, "autogen", point);
-        }
-    }
-
-    public void storeTop(BatchPoints batch, String dbName, long date, TopData data)
-    {
-        Point point = Point.measurement(Constants.MEASUREMENT_NAME).time(date, TimeUnit.MILLISECONDS)
-                .addField(AVG_LA, data.getAvgLa()).addField(AVG_CPU, data.getAvgCpuUsage())
-                .addField(AVG_MEM, data.getAvgMemUsage()).addField(MAX_LA, data.getMaxLa())
-                .addField(MAX_CPU, data.getMaxCpu()).addField(MAX_MEM, data.getMaxMem()).build();
-        if (batch != null)
-        {
-            batch.getPoints().add(point);
-        }
-        else
-        {
-            influx.write(dbName, "autogen", point);
         }
     }
 
