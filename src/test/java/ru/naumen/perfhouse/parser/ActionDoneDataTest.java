@@ -3,8 +3,8 @@ package ru.naumen.perfhouse.parser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import ru.naumen.perfhouse.parser.parsers.data.ActionDoneDataParser;
-import ru.naumen.perfhouse.parser.data.SdngData;
+import ru.naumen.perfhouse.plugins.sdng.parser.ActionDoneDataParser;
+import ru.naumen.perfhouse.plugins.sdng.parser.SdngData;
 
 public class ActionDoneDataTest {
     private ActionDoneDataParser parser;

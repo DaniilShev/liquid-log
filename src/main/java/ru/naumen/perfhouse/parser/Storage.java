@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import ru.naumen.perfhouse.influx.InfluxDAO;
+import ru.naumen.perfhouse.parser.interfaces.DataSet;
+import ru.naumen.perfhouse.parser.interfaces.ParserFactory;
+import ru.naumen.perfhouse.parser.interfaces.StoragePacker;
 
 @Service
 @Scope("request")

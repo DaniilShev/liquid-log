@@ -4,13 +4,15 @@ import org.apache.commons.lang3.tuple.MutableTriple;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.naumen.perfhouse.parser.annotation.ParsingMode;
+import ru.naumen.perfhouse.parser.interfaces.DataParser;
+import ru.naumen.perfhouse.parser.interfaces.ParserFactory;
+import ru.naumen.perfhouse.parser.interfaces.StoragePacker;
 
 import java.util.*;
 
 @Service
 public class ParserModes {
-    private Map<String, MutableTriple<ParserFactory, DataParser, StoragePacker>> modes = new HashMap<>();
+    private Map<String, ParserEntity> modes = new HashMap<>();
 
     @Autowired
     public ParserModes(ListableBeanFactory beanFactory) {
@@ -25,33 +27,31 @@ public class ParserModes {
             String modeName = parserBean.getClass().getAnnotation(ParsingMode.class).name();
 
             if (!modes.containsKey(modeName)) {
-                modes.put(modeName, new MutableTriple<>());
+                modes.put(modeName, new ParserEntity());
             }
 
             if (parserBean instanceof ParserFactory) {
-                modes.get(modeName).setLeft((ParserFactory)parserBean);
+                modes.get(modeName).setParserFactory((ParserFactory)parserBean);
                 continue;
             }
             if (parserBean instanceof DataParser) {
-                modes.get(modeName).setMiddle((DataParser)parserBean);
+                modes.get(modeName).setDataParser((DataParser)parserBean);
                 continue;
             }
             if (parserBean instanceof StoragePacker) {
-                modes.get(modeName).setRight((StoragePacker)parserBean);
+                modes.get(modeName).setStoragePacker((StoragePacker)parserBean);
             }
         }
     }
 
     private void removeIncompleteModes() {
-        for(Iterator<Map.Entry<String, MutableTriple<ParserFactory, DataParser, StoragePacker>>> it = modes.entrySet().iterator(); it.hasNext(); ) {
-            Map.Entry<String, MutableTriple<ParserFactory, DataParser, StoragePacker>> entry = it.next();
+        for(Iterator<Map.Entry<String, ParserEntity>> it = modes.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<String, ParserEntity> entry = it.next();
 
-            String modeName = entry.getKey();
-            MutableTriple<?,?,?> mode = entry.getValue();
-            if (mode.getLeft() == null || mode.getMiddle() == null || mode.getRight() == null) {
+            if (!entry.getValue().isComplete()) {
                 it.remove();
 
-                System.out.println(String.format("%s parser mode is incomplete. Ignored!", modeName));
+                System.out.println(String.format("%s parser mode is incomplete. Ignored!", entry.getKey()));
             }
         }
     }
@@ -65,14 +65,14 @@ public class ParserModes {
     }
 
     ParserFactory getParserFactory(String mode) {
-        return modes.get(mode).getLeft();
+        return modes.get(mode).getParserFactory();
     }
 
     DataParser getDataParser(String mode) {
-        return modes.get(mode).getMiddle();
+        return modes.get(mode).getDataParser();
     }
 
     StoragePacker getStoragePacker(String mode) {
-        return modes.get(mode).getRight();
+        return modes.get(mode).getStoragePacker();
     }
 }

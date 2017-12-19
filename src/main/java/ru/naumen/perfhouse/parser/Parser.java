@@ -3,6 +3,10 @@ package ru.naumen.perfhouse.parser;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.naumen.perfhouse.parser.interfaces.DataParser;
+import ru.naumen.perfhouse.parser.interfaces.ParserFactory;
+import ru.naumen.perfhouse.parser.interfaces.StoragePacker;
+import ru.naumen.perfhouse.parser.interfaces.TimeParser;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

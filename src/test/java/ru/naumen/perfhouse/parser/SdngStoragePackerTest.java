@@ -5,9 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import ru.naumen.perfhouse.influx.InfluxDAO;
-import ru.naumen.perfhouse.parser.factories.SdngParserFactory;
-import ru.naumen.perfhouse.parser.packers.SdngStoragePacker;
-import ru.naumen.perfhouse.parser.data.SdngData;
+import ru.naumen.perfhouse.parser.interfaces.ParserFactory;
+import ru.naumen.perfhouse.parser.interfaces.StoragePacker;
+import ru.naumen.perfhouse.plugins.sdng.parser.SdngParserFactory;
+import ru.naumen.perfhouse.plugins.sdng.parser.SdngStoragePacker;
+import ru.naumen.perfhouse.plugins.sdng.parser.SdngData;
 
 public class SdngStoragePackerTest {
     private InfluxDAO mockedInfluxDao;

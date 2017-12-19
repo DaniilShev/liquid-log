@@ -5,9 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import ru.naumen.perfhouse.influx.InfluxDAO;
-import ru.naumen.perfhouse.parser.factories.TopParserFactory;
-import ru.naumen.perfhouse.parser.packers.TopStoragePacker;
-import ru.naumen.perfhouse.parser.data.TopData;
+import ru.naumen.perfhouse.parser.interfaces.ParserFactory;
+import ru.naumen.perfhouse.parser.interfaces.StoragePacker;
+import ru.naumen.perfhouse.plugins.top.parser.TopParserFactory;
+import ru.naumen.perfhouse.plugins.top.parser.TopStoragePacker;
+import ru.naumen.perfhouse.plugins.top.parser.TopData;
 
 public class TopStoragePackerTest {
     private InfluxDAO mockedInfluxDao;

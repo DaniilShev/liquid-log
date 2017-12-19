@@ -5,9 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import ru.naumen.perfhouse.influx.InfluxDAO;
-import ru.naumen.perfhouse.parser.factories.GCParserFactory;
-import ru.naumen.perfhouse.parser.packers.GCStoragePacker;
-import ru.naumen.perfhouse.parser.data.GCData;
+import ru.naumen.perfhouse.parser.interfaces.ParserFactory;
+import ru.naumen.perfhouse.parser.interfaces.StoragePacker;
+import ru.naumen.perfhouse.plugins.gc.parser.GCParserFactory;
+import ru.naumen.perfhouse.plugins.gc.parser.GCStoragePacker;
+import ru.naumen.perfhouse.plugins.gc.parser.GCData;
 
 public class GCStoragePackerTest {
     private InfluxDAO mockedInfluxDao;

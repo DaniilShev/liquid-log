@@ -1,4 +1,5 @@
 <%@page import="ru.naumen.perfhouse.statdata.Constants"%>
+<%@ page import="ru.naumen.perfhouse.plugins.gc.GCConstants" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
@@ -11,12 +12,29 @@
     <title>SD40 Performance indicator</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css"
-          integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous"/>
+    <script src="/js/jquery-3.1.1.min.js"></script>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css"
+                integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi"
+                crossorigin="anonymous"/>
+    	<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js"
+                integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB"
+                crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"
             integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/style.css"/>
+    <script>
+            $(document).ready(function() {
+                var path = location.pathname + location.search;
+                $('.nav-item a').each(function(index, elem) {
+                     var jElem = $(elem);
+                     if (jElem.attr('href') == path) {
+                        jElem.removeClass("btn btn-outline-primary").addClass("nav-link active");
+                     }
+                });
+            })
+        </script>
 </head>
 
 <body>
@@ -24,9 +42,9 @@
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <%
     Number times[] = (Number[])request.getAttribute(Constants.TIME);
-    Number gcTimes[]=  (Number[])request.getAttribute(Constants.GarbageCollection.GCTIMES);
-    Number gcAvg[] = (Number[])request.getAttribute(Constants.GarbageCollection.AVARAGE_GC_TIME);
-    Number gcMax[] = (Number[])request.getAttribute(Constants.GarbageCollection.MAX_GC_TIME);
+    Number gcTimes[] = (Number[])request.getAttribute(GCConstants.GCTIMES);
+    Number gcAvg[] = (Number[])request.getAttribute(GCConstants.AVARAGE_GC_TIME);
+    Number gcMax[] = (Number[])request.getAttribute(GCConstants.MAX_GC_TIME);
     
   //Prepare links
   	String path="";
@@ -77,10 +95,13 @@
         Feel free to hide/show specific data by clicking on chart's legend
     </p>
     <ul class="nav nav-pills">
-		<li class="nav-item"><a class="btn btn-outline-primary" href="/history/${client}<%=custom %><%=path%>">Responses</a></li>
-		<li class="nav-item"><a class="btn btn-outline-primary" href="/history/${client}<%=custom %>/actions<%=path%>">Performed actions</a></li>
-		<li class="nav-item"><a class="nav-link active">Garbage Collection</a></li>
-		<li class="nav-item"><a class="btn btn-outline-primary" href="/history/${client}<%=custom %>/top<%=path%>">Top data</a></li>
+		<%  Map<String, String> tabs = (Map<String, String>)request.getAttribute("tabs");
+                for (String name : tabs.keySet()) {
+            %>
+                <li class="nav-item"><a class="btn btn-outline-primary" href="/history/${client}<%=custom %><%=tabs.get(name) %><%=path%>"><%=name %></a></li>
+            <%
+                }
+            %>
 	</ul>
 </div>
 

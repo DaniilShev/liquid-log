@@ -3,7 +3,10 @@ package ru.naumen.perfhouse.influx;
 import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.QueryResult;
 import org.json.JSONObject;
-import ru.naumen.perfhouse.parser.data.*;
+import ru.naumen.perfhouse.plugins.gc.parser.GCData;
+import ru.naumen.perfhouse.plugins.sdng.parser.ActionDoneData;
+import ru.naumen.perfhouse.plugins.sdng.parser.ErrorData;
+import ru.naumen.perfhouse.plugins.top.parser.TopData;
 
 import java.util.List;
 
