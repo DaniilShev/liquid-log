@@ -1,5 +1,6 @@
 package ru.naumen.perfhouse.plugins.sdng;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,13 +18,16 @@ public class ActionDoneController extends HistoryController
 {
     private static final String ACTIONS_VIEW = "history_actions";
 
+    @Autowired
+    private ActionDoneConstants constants;
+
     @RequestMapping(path = "/history/{client}/actions/{year}/{month}/{day}")
     public ModelAndView getByDay(@PathVariable("client") String client,
                                      @PathVariable(name = "year", required = false) int year,
                                      @PathVariable(name = "month", required = false) int month,
                                      @PathVariable(name = "day", required = false) int day) throws ParseException
     {
-        return getDataAndViewByDate(client, new ActionDoneDataType(), year, month, day, ACTIONS_VIEW);
+        return getDataAndViewByDate(client, constants, year, month, day, ACTIONS_VIEW);
     }
 
     @RequestMapping(path = "/history/{client}/actions/{year}/{month}")
@@ -31,19 +35,19 @@ public class ActionDoneController extends HistoryController
                                        @PathVariable(name = "year", required = false) int year,
                                        @PathVariable(name = "month", required = false) int month) throws ParseException
     {
-        return getDataAndViewByDate(client, new ActionDoneDataType(), year, month, 0, ACTIONS_VIEW, true);
+        return getDataAndViewByDate(client, constants, year, month, 0, ACTIONS_VIEW, true);
     }
 
     @RequestMapping(path = "/history/{client}/actions")
     public ModelAndView getLast(@PathVariable("client") String client,
                                        @RequestParam(name = "count", defaultValue = "864") int count) throws ParseException
     {
-        return getDataAndView(client, new ActionDoneDataType(), count, ACTIONS_VIEW);
+        return getDataAndView(client, constants, count, ACTIONS_VIEW);
     }
 
     @RequestMapping(path = "/history/{client}/custom/actions")
     public ModelAndView getCustom(@PathVariable("client") String client, @RequestParam("from") String from,
                                       @RequestParam("to") String to, @RequestParam("maxResults") int count) throws ParseException {
-        return getDataAndViewCustom(client, new ActionDoneDataType(), from, to, count, ACTIONS_VIEW);
+        return getDataAndViewCustom(client, constants, from, to, count, ACTIONS_VIEW);
     }
 }

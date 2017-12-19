@@ -50,13 +50,15 @@
 
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <%
+    TopConstants pluginConstants = (TopConstants)request.getAttribute("constants");
+
     Number times[] = (Number[])request.getAttribute(Constants.TIME);
-    Number avgLa[]=  (Number[])request.getAttribute(TopConstants.AVG_LA);
-    Number avgCpu[]=  (Number[])request.getAttribute(TopConstants.AVG_CPU);
-    Number avgMem[]=  (Number[])request.getAttribute(TopConstants.AVG_MEM);
-    Number maxLa[]=  (Number[])request.getAttribute(TopConstants.MAX_LA);
-    Number maxCpu[]=  (Number[])request.getAttribute(TopConstants.MAX_CPU);
-    Number maxMem[]=  (Number[])request.getAttribute(TopConstants.MAX_MEM);
+    Number avgLa[]=  (Number[])request.getAttribute(pluginConstants.AVG_LA);
+    Number avgCpu[]=  (Number[])request.getAttribute(pluginConstants.AVG_CPU);
+    Number avgMem[]=  (Number[])request.getAttribute(pluginConstants.AVG_MEM);
+    Number maxLa[]=  (Number[])request.getAttribute(pluginConstants.MAX_LA);
+    Number maxCpu[]=  (Number[])request.getAttribute(pluginConstants.MAX_CPU);
+    Number maxMem[]=  (Number[])request.getAttribute(pluginConstants.MAX_MEM);
     
   //Prepare links
   	String path="";

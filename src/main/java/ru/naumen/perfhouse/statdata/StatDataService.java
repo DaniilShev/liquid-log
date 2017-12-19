@@ -109,9 +109,9 @@ public class StatDataService
         return result;
     }
 
-    public StatData getData(String client, DataType dataType, int maxResults) throws ParseException
+    public StatData getData(String client, PluginConstants pluginConstant, int maxResults) throws ParseException
     {
-        Series result = influxdao.executeQuery(client, prepareQuery(dataType, maxResults));
+        Series result = influxdao.executeQuery(client, prepareQuery(pluginConstant, maxResults));
         if (result == null)
         {
             return null;
@@ -121,7 +121,7 @@ public class StatDataService
         return data;
     }
 
-    public StatData getDataCustom(String client, DataType type, String from, String to) throws ParseException
+    public StatData getDataCustom(String client, PluginConstants type, String from, String to) throws ParseException
     {
         InfluxDateRange utcRange = InfluxDateHelper.getInfluxRange(from, to);
         String template = "SELECT %s FROM %s WHERE %s ORDER BY %s DESC";
@@ -129,7 +129,7 @@ public class StatDataService
 
         String where = time + ">='" + utcRange.from() + "' and " + time + "<='" + utcRange.to() + "'";
 
-        String query = String.format(template, Joiner.on(',').join(type.getTypeProperties()),
+        String query = String.format(template, Joiner.on(',').join(type.getProps()),
                 Constants.MEASUREMENT_NAME, where, time);
 
         Series result = influxdao.executeQuery(client, query);
@@ -140,9 +140,9 @@ public class StatDataService
         return createData(result);
     }
 
-    public StatData getDataDate(String client, DataType dataType, int year, int month, int day) throws ParseException
+    public StatData getDataDate(String client, PluginConstants constants, int year, int month, int day) throws ParseException
     {
-        String q = prepareQueryDate(dataType, year, month, day);
+        String q = prepareQueryDate(constants, year, month, day);
         Series result = influxdao.executeQuery(client, q);
         if (result == null)
         {
@@ -173,18 +173,18 @@ public class StatDataService
         return data;
     }
 
-    private String prepareQuery(DataType type, int count)
+    private String prepareQuery(PluginConstants type, int count)
     {
         String qTemp = "SELECT %s from %s ORDER BY %s DESC LIMIT %s";
-        return String.format(qTemp, Joiner.on(',').join(type.getTypeProperties()), Constants.MEASUREMENT_NAME,
+        return String.format(qTemp, Joiner.on(',').join(type.getProps()), Constants.MEASUREMENT_NAME,
                 Constants.TIME, count);
     }
 
-    private String prepareQueryDate(DataType dataType, int year, int month, int day)
+    private String prepareQueryDate(PluginConstants constants, int year, int month, int day)
     {
         String template = "SELECT %s from %s WHERE %s ORDER BY %s DESC";
 
-        return String.format(template, Joiner.on(',').join(dataType.getTypeProperties()), Constants.MEASUREMENT_NAME,
+        return String.format(template, Joiner.on(',').join(constants.getProps()), Constants.MEASUREMENT_NAME,
                 prepareWhere(year, month, day), Constants.TIME);
     }
 

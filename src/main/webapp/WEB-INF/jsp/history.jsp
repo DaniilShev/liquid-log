@@ -39,15 +39,17 @@
 
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <%
-    Number p50[] = (Number[])request.getAttribute(ResponseTimesConstants.PERCENTILE50);
-    Number p95[] = (Number[])request.getAttribute(ResponseTimesConstants.PERCENTILE95);
-    Number p99[] = (Number[])request.getAttribute(ResponseTimesConstants.PERCENTILE99);
-    Number p999[] = (Number[])request.getAttribute(ResponseTimesConstants.PERCENTILE999);
-    Number p100[] = (Number[])request.getAttribute(ResponseTimesConstants.MAX);
-    Number count[]= (Number[])request.getAttribute(ResponseTimesConstants.COUNT);
-    Number errors[]= (Number[])request.getAttribute(ResponseTimesConstants.ERRORS);
-    Number mean[]= (Number[])request.getAttribute(ResponseTimesConstants.MEAN);
-    Number stddev[]= (Number[])request.getAttribute(ResponseTimesConstants.STDDEV);
+    ResponseTimesConstants pluginConstants = (ResponseTimesConstants)request.getAttribute("constants");
+
+    Number p50[] = (Number[])request.getAttribute(pluginConstants.PERCENTILE50);
+    Number p95[] = (Number[])request.getAttribute(pluginConstants.PERCENTILE95);
+    Number p99[] = (Number[])request.getAttribute(pluginConstants.PERCENTILE99);
+    Number p999[] = (Number[])request.getAttribute(pluginConstants.PERCENTILE999);
+    Number p100[] = (Number[])request.getAttribute(pluginConstants.MAX);
+    Number count[]= (Number[])request.getAttribute(pluginConstants.COUNT);
+    Number errors[]= (Number[])request.getAttribute(pluginConstants.ERRORS);
+    Number mean[]= (Number[])request.getAttribute(pluginConstants.MEAN);
+    Number stddev[]= (Number[])request.getAttribute(pluginConstants.STDDEV);
     Number times[] = (Number[])request.getAttribute(Constants.TIME);
     
   //Prepare links

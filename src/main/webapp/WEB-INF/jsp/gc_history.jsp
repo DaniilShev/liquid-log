@@ -41,10 +41,12 @@
 
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <%
+    GCConstants pluginConstants = (GCConstants)request.getAttribute("constants");
+
     Number times[] = (Number[])request.getAttribute(Constants.TIME);
-    Number gcTimes[] = (Number[])request.getAttribute(GCConstants.GCTIMES);
-    Number gcAvg[] = (Number[])request.getAttribute(GCConstants.AVARAGE_GC_TIME);
-    Number gcMax[] = (Number[])request.getAttribute(GCConstants.MAX_GC_TIME);
+    Number gcTimes[] = (Number[])request.getAttribute(pluginConstants.GCTIMES);
+    Number gcAvg[] = (Number[])request.getAttribute(pluginConstants.AVARAGE_GC_TIME);
+    Number gcMax[] = (Number[])request.getAttribute(pluginConstants.MAX_GC_TIME);
     
   //Prepare links
   	String path="";

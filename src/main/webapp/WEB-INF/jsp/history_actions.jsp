@@ -1,4 +1,3 @@
-<%@page import="ru.naumen.perfhouse.statdata.DataType"%>
 <%@page import="ru.naumen.perfhouse.statdata.Constants"%>
 <%@ page import="ru.naumen.perfhouse.plugins.sdng.ActionDoneConstants" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -42,16 +41,18 @@
 
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <%
+    ActionDoneConstants pluginConstants = (ActionDoneConstants)request.getAttribute("constants");
+
     Number times[] = (Number[])request.getAttribute(Constants.TIME);
-    Number add[] = (Number[])request.getAttribute(ActionDoneConstants.ADD_ACTIONS);
-    Number edit[] = (Number[])request.getAttribute(ActionDoneConstants.EDIT_ACTIONS);
-    Number catalogs[] = (Number[])request.getAttribute(ActionDoneConstants.GET_CATALOGS_ACTIONS);
-    Number list[] = (Number[])request.getAttribute(ActionDoneConstants.LIST_ACTIONS);
-    Number comment[] = (Number[])request.getAttribute(ActionDoneConstants.COMMENT_ACTIONS);
-    Number form[] = (Number[])request.getAttribute(ActionDoneConstants.GET_FORM_ACTIONS);
-    Number dtos[] = (Number[])request.getAttribute(ActionDoneConstants.GET_DT_OBJECT_ACTIONS);
-    Number search[] = (Number[])request.getAttribute(ActionDoneConstants.SEARCH_ACTIONS);
-    Number actionsSumm[] = (Number[])request.getAttribute(ActionDoneConstants.ACTIONS_COUNT);
+    Number add[] = (Number[])request.getAttribute(pluginConstants.ADD_ACTIONS);
+    Number edit[] = (Number[])request.getAttribute(pluginConstants.EDIT_ACTIONS);
+    Number catalogs[] = (Number[])request.getAttribute(pluginConstants.GET_CATALOGS_ACTIONS);
+    Number list[] = (Number[])request.getAttribute(pluginConstants.LIST_ACTIONS);
+    Number comment[] = (Number[])request.getAttribute(pluginConstants.COMMENT_ACTIONS);
+    Number form[] = (Number[])request.getAttribute(pluginConstants.GET_FORM_ACTIONS);
+    Number dtos[] = (Number[])request.getAttribute(pluginConstants.GET_DT_OBJECT_ACTIONS);
+    Number search[] = (Number[])request.getAttribute(pluginConstants.SEARCH_ACTIONS);
+    Number actionsSumm[] = (Number[])request.getAttribute(pluginConstants.ACTIONS_COUNT);
     
     
   //Prepare links
