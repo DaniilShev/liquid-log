@@ -3,7 +3,10 @@ package ru.naumen.perfhouse.influx;
 import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.QueryResult;
 import org.json.JSONObject;
-import ru.naumen.perfhouse.parser.data.*;
+import ru.naumen.perfhouse.plugins.gc.parser.GCData;
+import ru.naumen.perfhouse.plugins.sdng.parser.ActionDoneData;
+import ru.naumen.perfhouse.plugins.sdng.parser.ErrorData;
+import ru.naumen.perfhouse.plugins.top.parser.TopData;
 
 import java.util.List;
 
@@ -20,15 +23,7 @@ public interface InfluxDAO {
 
     BatchPoints startBatchPoints(String dbName);
 
-    void storeActionsFromLog(BatchPoints batch, String dbName, long date,
-                                    ActionDoneData dones,
-                             ErrorData errors);
-
     void storeFromJSon(BatchPoints batch, String dbName, JSONObject data);
-
-    void storeGc(BatchPoints batch, String dbName, long date, GCData gc);
-
-    void storeTop(BatchPoints batch, String dbName, long date, TopData data);
 
     void writeBatch(BatchPoints batch);
 }

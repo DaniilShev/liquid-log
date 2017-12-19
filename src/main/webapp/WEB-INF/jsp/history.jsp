@@ -4,7 +4,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="org.influxdb.dto.QueryResult.Series" %>
-<%@ page import="ru.naumen.perfhouse.statdata.Constants.ResponseTimes" %>
+<%@ page import="ru.naumen.perfhouse.plugins.sdng.ResponseTimesConstants" %>
 
 <html>
 
@@ -12,11 +12,26 @@
     <title>SD40 Performance indicator</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
+    <script src="/js/jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css"
           integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js"
+                integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB"
+                crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"
             integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK"
             crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            var path = location.pathname + location.search;
+            $('.nav-item a').each(function(index, elem) {
+                 var jElem = $(elem);
+                 if (jElem.attr('href') == path) {
+                    jElem.removeClass("btn btn-outline-primary").addClass("nav-link active");
+                 }
+            });
+        })
+    </script>
    <link rel="stylesheet" href="/css/style.css"/>
 </head>
 
@@ -24,15 +39,17 @@
 
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <%
-    Number p50[] = (Number[])request.getAttribute(Constants.ResponseTimes.PERCENTILE50);
-    Number p95[] = (Number[])request.getAttribute(Constants.ResponseTimes.PERCENTILE95);
-    Number p99[] = (Number[])request.getAttribute(Constants.ResponseTimes.PERCENTILE99);
-    Number p999[] = (Number[])request.getAttribute(Constants.ResponseTimes.PERCENTILE999);
-    Number p100[] = (Number[])request.getAttribute(Constants.ResponseTimes.MAX);
-    Number count[]= (Number[])request.getAttribute(Constants.ResponseTimes.COUNT);
-    Number errors[]= (Number[])request.getAttribute(Constants.ResponseTimes.ERRORS);
-    Number mean[]= (Number[])request.getAttribute(Constants.ResponseTimes.MEAN);
-    Number stddev[]= (Number[])request.getAttribute(Constants.ResponseTimes.STDDEV);
+    ResponseTimesConstants pluginConstants = (ResponseTimesConstants)request.getAttribute("constants");
+
+    Number p50[] = (Number[])request.getAttribute(pluginConstants.PERCENTILE50);
+    Number p95[] = (Number[])request.getAttribute(pluginConstants.PERCENTILE95);
+    Number p99[] = (Number[])request.getAttribute(pluginConstants.PERCENTILE99);
+    Number p999[] = (Number[])request.getAttribute(pluginConstants.PERCENTILE999);
+    Number p100[] = (Number[])request.getAttribute(pluginConstants.MAX);
+    Number count[]= (Number[])request.getAttribute(pluginConstants.COUNT);
+    Number errors[]= (Number[])request.getAttribute(pluginConstants.ERRORS);
+    Number mean[]= (Number[])request.getAttribute(pluginConstants.MEAN);
+    Number stddev[]= (Number[])request.getAttribute(pluginConstants.STDDEV);
     Number times[] = (Number[])request.getAttribute(Constants.TIME);
     
   //Prepare links
@@ -82,10 +99,13 @@
         Feel free to hide/show specific percentile by clicking on chart's legend
     </p>
     <ul class="nav nav-pills">
-		<li class="nav-item"><a class="nav-link active">Responses</a></li>
-		<li class="nav-item"><a class="btn btn-outline-primary" href="/history/${client}<%=custom %>/actions<%=path%>">Performed actions</a></li>
-		<li class="nav-item"><a class="btn btn-outline-primary" href="/history/${client}<%=custom %>/gc<%=path%>">Garbage Collection</a></li>
-		<li class="nav-item"><a class="btn btn-outline-primary" href="/history/${client}<%=custom %>/top<%=path%>">Top data</a></li>
+    <%  Map<String, String> tabs = (Map<String, String>)request.getAttribute("tabs");
+        for (String name : tabs.keySet()) {
+    %>
+        <li class="nav-item"><a class="btn btn-outline-primary" href="/history/${client}<%=custom %><%=tabs.get(name) %><%=path%>"><%=name %></a></li>
+    <%
+        }
+    %>
 	</ul>
 </div>
 
